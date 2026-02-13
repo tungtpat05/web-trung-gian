@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=escrow_db;encrypt=true;trustServerCertificate=true
-    username: sa
-    password: your_password
+    username: admin
+    password: 123
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
@@ -21,3 +21,6 @@ spring:
 
 server:
   port: 9999
+  error:
+    include-message: always
+    include-binding-errors: always
