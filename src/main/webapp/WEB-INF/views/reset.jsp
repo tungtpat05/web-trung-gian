@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,10 +29,10 @@
 
 			<form class="login100-form validate-form"
 				  method="post"
-				  action="${pageContext.request.contextPath}/doLogin">
+				  action="${pageContext.request.contextPath}/doReset">
 
 				<span class="login100-form-title">
-					Member Login
+					Get Account Details
 				</span>
 
 				<!-- 🔧 CSRF token -->
@@ -41,46 +40,25 @@
 					   name="${_csrf.parameterName}"
 					   value="${_csrf.token}"/>
 
-				<div class="wrap-input100 validate-input" data-validate = "Username is required">
-					<input class="input100" type="text" name="username" placeholder="Username or email">
+				<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+					<input class="input100" type="email" name="email" placeholder="Email">
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
-						<i class="fa fa-user"></i>
-					</span>
-				</div>
-
-				<div class="wrap-input100 validate-input" data-validate = "Password is required">
-					<input class="input100" type="password" name="password" placeholder="Password">
-					<span class="focus-input100"></span>
-					<span class="symbol-input100">
-						<i class="fa fa-lock"></i>
+						<i class="fa fa-envelope"></i>
 					</span>
 				</div>
 
 				<div class="container-login100-form-btn">
 					<button class="login100-form-btn" type="submit">
-						Login
+						Set Verification To Email
 					</button>
 				</div>
 
-                <c:if test="${param.error=='true'}">
-                    <div class="input100 text-danger">
-                        Username or password is incorrect
-                    </div>
-                </c:if>
-
-
-				<div class="text-center p-t-12">
-					<a class="txt2" href="${pageContext.request.contextPath}/auth/reset">
-						Forgot Username / Password?
-					</a>
-				</div>
-
 				<div class="text-center p-t-136">
-					<a class="txt2" href="${pageContext.request.contextPath}/auth/register">
-						Create your Account
-					</a>
-				</div>
+                	<a class="txt2" href="${pageContext.request.contextPath}/auth/login">
+                	    Go Back
+                	</a>
+                </div>
 			</form>
 		</div>
 	</div>
