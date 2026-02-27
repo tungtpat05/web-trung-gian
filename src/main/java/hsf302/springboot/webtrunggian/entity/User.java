@@ -1,5 +1,6 @@
 package hsf302.springboot.webtrunggian.entity;
 
+import hsf302.springboot.webtrunggian.entity.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -7,18 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-enum ROLE{ADMIN,USER}
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class MyUser {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
 
     @Column(nullable = false, unique = true)
@@ -34,6 +33,6 @@ public class MyUser {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ROLE role =  ROLE.USER;
+    private UserRole role =  UserRole.USER;
 
 }
