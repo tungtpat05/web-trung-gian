@@ -1,4 +1,4 @@
-package hsf302.springboot.webtrunggian.Security;
+package hsf302.springboot.webtrunggian.security;
 
 import hsf302.springboot.webtrunggian.service.UserService;
 import lombok.AllArgsConstructor;

@@ -1,18 +1,15 @@
 package hsf302.springboot.webtrunggian.controller;
 
-import hsf302.springboot.webtrunggian.entity.MyUser;
+import hsf302.springboot.webtrunggian.entity.User;
 import hsf302.springboot.webtrunggian.repository.UserRepository;
-import hsf302.springboot.webtrunggian.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,13 +44,13 @@ public class RegistrationController {
                 && !(auth instanceof AnonymousAuthenticationToken)) {
             return "redirect:/home";
         }
-//        model.addAttribute("user", new MyUser());
+//        model.addAttribute("user", new User());
         return "register";
     }
 
     @PostMapping("/doRegister")
     public String doRegister(
-            @Valid MyUser user,
+            @Valid User user,
             BindingResult result
     ) {
         System.out.println("REGISTER HIT");

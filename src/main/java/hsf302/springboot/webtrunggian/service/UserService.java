@@ -1,10 +1,9 @@
 package hsf302.springboot.webtrunggian.service;
 
-import hsf302.springboot.webtrunggian.entity.MyUser;
+import hsf302.springboot.webtrunggian.entity.User;
 import hsf302.springboot.webtrunggian.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,10 +19,10 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<MyUser> user = repo.findByUsername(username);
+        Optional<User> user = repo.findByUsername(username);
         if (user.isPresent()) {
             var userDetails = user.get();
-            return User.builder()
+            return org.springframework.security.core.userdetails.User.builder()
                     .username(userDetails.getUsername())
                     .password(userDetails.getPassword())
                     .build();
