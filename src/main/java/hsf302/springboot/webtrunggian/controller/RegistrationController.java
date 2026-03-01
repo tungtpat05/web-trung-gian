@@ -2,6 +2,7 @@ package hsf302.springboot.webtrunggian.controller;
 
 import hsf302.springboot.webtrunggian.entity.User;
 import hsf302.springboot.webtrunggian.repository.UserRepository;
+import hsf302.springboot.webtrunggian.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class RegistrationController {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/login")
 //    @ResponseBody
@@ -61,6 +65,10 @@ public class RegistrationController {
 
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
+
+        // Create each user with 1 wallet
+        userService.createWallet(user);
+
         return "redirect:/auth/login";
     }
 

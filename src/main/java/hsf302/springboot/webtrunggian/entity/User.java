@@ -35,4 +35,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role =  UserRole.USER;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Wallet wallet;
+
 }
