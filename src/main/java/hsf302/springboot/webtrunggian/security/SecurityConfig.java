@@ -88,6 +88,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                                     "/auth/reset",
                                     "/auth/status"
                             ).permitAll()
+                            .requestMatchers("/api/sepay-webhook").permitAll()
                             .requestMatchers(
                                     "/home"
                             ).authenticated()//user đã đăng nhập
