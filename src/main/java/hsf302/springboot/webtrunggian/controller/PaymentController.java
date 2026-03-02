@@ -1,15 +1,22 @@
 package hsf302.springboot.webtrunggian.controller;
 
 import hsf302.springboot.webtrunggian.entity.User;
+import hsf302.springboot.webtrunggian.entity.WalletTransaction;
 import hsf302.springboot.webtrunggian.service.PaymentService;
 import hsf302.springboot.webtrunggian.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Map;
 
 @Controller
@@ -47,4 +54,32 @@ public class PaymentController {
 
         return "redirect:/payment/deposit/qr";
     }
+
+    @GetMapping("payment/withdraw")
+    public String withdrawForm() {
+        return "payment/withdraw-form";
+    }
+
+    @GetMapping("payment/history")
+    public String listTransactions(
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "startDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "endDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            Model model) {
+
+        // 10 bản ghi mỗi trang, sắp xếp mới nhất lên đầu
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+
+        // Gọi Service với đầy đủ các tham số lọc
+        Page<WalletTransaction> transactionPage = paymentService.searchTransactions(id, type, startDate, endDate, pageable);
+
+        model.addAttribute("transactionPage", transactionPage);
+
+        return "payment/transaction-history";
+    }
+
 }

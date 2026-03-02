@@ -8,13 +8,18 @@ import hsf302.springboot.webtrunggian.repository.PaymentRequestRepository;
 import hsf302.springboot.webtrunggian.repository.ProviderTransactionRepository;
 import hsf302.springboot.webtrunggian.repository.WalletRepository;
 import hsf302.springboot.webtrunggian.repository.WalletTransactionRepository;
+import hsf302.springboot.webtrunggian.repository.specification.TransactionSpecifications;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,5 +113,13 @@ public class PaymentService {
         paymentRequest.setCompletedAt(LocalDateTime.now());
         System.out.println("Payment request with internalCode: " + internalCode + " is completed. Amount paid: " + amountPaid);
         paymentRequestRepository.save(paymentRequest);
+    }
+
+    public Page<WalletTransaction> searchTransactions(Integer id, String type, LocalDate start, LocalDate end, Pageable pageable) {
+        Specification<WalletTransaction> spec = Specification.where(TransactionSpecifications.hasId(id))
+                .and(TransactionSpecifications.hasType(type))
+                .and(TransactionSpecifications.createdBetween(start, end));
+
+        return walletTransactionRepository.findAll(spec, pageable);
     }
 }
