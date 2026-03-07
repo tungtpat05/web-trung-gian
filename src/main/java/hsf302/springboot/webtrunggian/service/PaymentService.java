@@ -31,7 +31,7 @@ public class PaymentService {
     private WalletRepository walletRepository;
     private WalletTransactionRepository walletTransactionRepository;
     private UserRepository userRepository;
-    private final WithdrawRequestRepository withdrawRequestRepository;
+    private WithdrawRequestRepository withdrawRequestRepository;
 
 
     @Transactional
@@ -55,9 +55,11 @@ public class PaymentService {
     }
 
     @Transactional
-    public void processWebHook(Map<String, Object> payload) {
+    public void processWebHookForDeposit(Map<String, Object> payload) {
         // Get data form payload
         String content = (String) payload.get("content");
+
+        // Cần xử lí lại vì mỗi ngân hàng gửi một content format khác nhau
         String internalCode = content.substring(content.indexOf("NAP"));
 
         // Find request in payment_requests with internal_code = internalCode
@@ -178,5 +180,51 @@ public class PaymentService {
         wallet.setLockedBalance(wallet.getLockedBalance().subtract(withdrawRequest.getAmount()));
         wallet.setBalance(wallet.getBalance().add(withdrawRequest.getAmount()));
         walletRepository.save(wallet);
+    }
+
+    // Process Withdraw Webhook
+    @Transactional
+    public void processWebHookForWithdraw(Map<String, Object> payload) {
+        // Get data form payload
+        String content = (String) payload.get("content");
+
+        // Cần xử lí lại vì mỗi ngân hàng gửi một content format khác nhau
+        String internalCode = content.substring(content.indexOf("RUT"));
+
+        // Find request in withdraw_requests with internal_code = internalCode
+        WithdrawRequest withdrawRequest = withdrawRequestRepository.findByInternalCode(internalCode).orElse(null);
+        if (withdrawRequest == null) {
+            System.out.println("Not found withdraw request with internalCode: " + internalCode);
+            return;
+        }
+
+        if (!withdrawRequest.getStatus().equals(PaymentRequestStatus.PENDING)) {
+            System.out.println("Withdraw request with internalCode: " + internalCode + " is not pending. Current status: " + withdrawRequest.getStatus());
+            return;
+        }
+
+        // Update Wallet balance
+        Wallet wallet = walletRepository.findByUserId(withdrawRequest.getUser().getId()).orElse(null);
+        BigDecimal transferAmount = new BigDecimal(payload.get("transferAmount").toString());
+
+        wallet.setLockedBalance(wallet.getLockedBalance().subtract(transferAmount));
+        walletRepository.save(wallet);
+
+        // Log of Balance change (wallet_transactions)
+        WalletTransaction walletTransaction = new WalletTransaction();
+        walletTransaction.setWallet(wallet);
+        walletTransaction.setType(WalletTransactionType.WITHDRAW);
+        walletTransaction.setAmount(transferAmount);
+        walletTransaction.setBalanceBefore(wallet.getBalance().add(transferAmount));
+        walletTransaction.setBalanceAfter(wallet.getBalance());
+        walletTransaction.setReferenceType(WalletTransactionReferenceType.WITHDRAW);
+        walletTransaction.setReferenceId(withdrawRequest.getId());
+        walletTransactionRepository.save(walletTransaction);
+
+        // Complete withdraw request
+        withdrawRequest.setStatus(WithdrawRequestStatus.COMPLETED);
+        withdrawRequest.setUpdatedAt(LocalDateTime.now());
+        System.out.println("Withdraw request with internalCode: " + internalCode + " is completed. Amount paid: " + transferAmount);
+        withdrawRequestRepository.save(withdrawRequest);
     }
 }
