@@ -47,7 +47,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/payment/withdraw"
+                        <a href="${pageContext.request.contextPath}/payment/withdraw-requests"
                            class="nav-link text-light opacity-75">
                             <i class="bi bi-arrow-up-circle me-2"></i>
                             Yêu cầu rút tiền

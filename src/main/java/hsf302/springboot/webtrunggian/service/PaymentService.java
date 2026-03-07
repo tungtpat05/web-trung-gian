@@ -136,14 +136,47 @@ public class PaymentService {
 
         // Create request
         WithdrawRequest withdrawRequest = new WithdrawRequest();
+
+        // Create UNIQUE internal_code: RUT + timestamp
+        String internalCode = "RUT" + System.currentTimeMillis();
+
         User user = new User();
         user.setId(userId);
         withdrawRequest.setUser(user);
         withdrawRequest.setAmount(withdrawAmount);
+        withdrawRequest.setInternalCode(internalCode);
         withdrawRequest.setBankName(bankName);
         withdrawRequest.setBankAcc(bankAcc);
         withdrawRequest.setStatus(WithdrawRequestStatus.PENDING);
         // Save to DB
         withdrawRequestRepository.save(withdrawRequest);
+
+        wallet.setBalance(wallet.getBalance().subtract(withdrawAmount));
+        wallet.setLockedBalance(wallet.getBalance().add(withdrawAmount));
+        walletRepository.save(wallet);
+    }
+
+    public Page<WithdrawRequest> searchWithDrawRequests(Pageable pageable) {
+        return withdrawRequestRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public void cancelWithdrawRequest(Integer withdrawRequestId, Integer userId) {
+        WithdrawRequest withdrawRequest = withdrawRequestRepository.findById(withdrawRequestId).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy yêu cầu rút tiền: " + withdrawRequestId));
+        if (!withdrawRequest.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("Bạn không có quyền hủy yêu cầu rút tiền này");
+        }
+        if (!withdrawRequest.getStatus().equals(WithdrawRequestStatus.PENDING)) {
+            throw new IllegalArgumentException("Chỉ có thể hủy yêu cầu rút tiền đang ở trạng thái PENDING");
+        }
+
+        withdrawRequest.setStatus(WithdrawRequestStatus.CANCELED);
+        withdrawRequestRepository.save(withdrawRequest);
+
+        // Unlock balance
+        Wallet wallet = walletRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy ví của người dùng: " + userId));
+        wallet.setLockedBalance(wallet.getLockedBalance().subtract(withdrawRequest.getAmount()));
+        wallet.setBalance(wallet.getBalance().add(withdrawRequest.getAmount()));
+        walletRepository.save(wallet);
     }
 }

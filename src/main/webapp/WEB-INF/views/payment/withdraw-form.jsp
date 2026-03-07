@@ -32,7 +32,7 @@
                     <h6 class="mb-0">Yêu cầu rút tiền</h6>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="${pageContext.request.contextPath}/payment/withdraw">
+                    <form method="post" action="${pageContext.request.contextPath}/payment/withdraw-requests">
 
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label text-end fw-bold">Số tiền (VND) (*)</label>
@@ -67,7 +67,7 @@
                         <div class="row">
                             <div class="col-sm-9 offset-sm-3 text-center">
                                 <button type="submit" class="btn btn-success px-4">
-                                    RÚT TIỀN
+                                    Tạo yêu cầu
                                 </button>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
             </c:if>
 
             <div>
-                <a href="${pageContext.request.contextPath}/home">Quay lại</a>
+                <a href="${pageContext.request.contextPath}/payment/withdraw-requests">Quay lại</a>
             </div>
 
         </main>

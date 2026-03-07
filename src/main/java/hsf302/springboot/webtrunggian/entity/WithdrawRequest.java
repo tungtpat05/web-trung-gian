@@ -27,6 +27,9 @@ public class WithdrawRequest {
     @Column(precision = 18, scale = 2)
     private BigDecimal amount;
 
+    @Column(name = "internal_code", unique = true, length = 50)
+    private String internalCode;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private WithdrawRequestStatus status;
@@ -40,6 +43,6 @@ public class WithdrawRequest {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "approved_at")
-    private LocalDateTime approvedAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }
