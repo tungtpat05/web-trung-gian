@@ -82,4 +82,23 @@ public class PaymentController {
         return "payment/transaction-history";
     }
 
+    @PostMapping("payment/withdraw")
+    public String createWithdrawRequest(
+            @RequestParam("amount") String amount,
+            @RequestParam("bank-name") String bankName,
+            @RequestParam("bank-acc") String bankAcc,
+            @ModelAttribute("user") User currentUser,
+            RedirectAttributes redirectAttributes
+    ) {
+        BigDecimal withdrawAmount = new BigDecimal(amount);
+
+        try {
+            // Create Withdraw Request
+            paymentService.createWithdrawRequest(currentUser.getId(), withdrawAmount, bankName, bankAcc);
+            redirectAttributes.addFlashAttribute("successMessage", "Withdraw request created successfully!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/payment/withdraw";
+    }
 }

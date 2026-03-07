@@ -1,6 +1,7 @@
 package hsf302.springboot.webtrunggian.entity;
 
 import hsf302.springboot.webtrunggian.entity.enums.PaymentRequestStatus;
+import hsf302.springboot.webtrunggian.entity.enums.WithdrawRequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,10 +29,13 @@ public class WithdrawRequest {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private PaymentRequestStatus status;
+    private WithdrawRequestStatus status;
 
-    @Column(name = "bank_info")
-    private String bankInfo;
+    @Column(name = "bank_name")
+    private String bankName;
+
+    @Column(name = "bank_acc")
+    private String bankAcc;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

@@ -4,10 +4,8 @@ import hsf302.springboot.webtrunggian.entity.*;
 import hsf302.springboot.webtrunggian.entity.enums.PaymentRequestStatus;
 import hsf302.springboot.webtrunggian.entity.enums.WalletTransactionReferenceType;
 import hsf302.springboot.webtrunggian.entity.enums.WalletTransactionType;
-import hsf302.springboot.webtrunggian.repository.PaymentRequestRepository;
-import hsf302.springboot.webtrunggian.repository.ProviderTransactionRepository;
-import hsf302.springboot.webtrunggian.repository.WalletRepository;
-import hsf302.springboot.webtrunggian.repository.WalletTransactionRepository;
+import hsf302.springboot.webtrunggian.entity.enums.WithdrawRequestStatus;
+import hsf302.springboot.webtrunggian.repository.*;
 import hsf302.springboot.webtrunggian.repository.specification.TransactionSpecifications;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,8 @@ public class PaymentService {
     private ProviderTransactionRepository providerTransactionRepository;
     private WalletRepository walletRepository;
     private WalletTransactionRepository walletTransactionRepository;
+    private UserRepository userRepository;
+    private final WithdrawRequestRepository withdrawRequestRepository;
 
 
     @Transactional
@@ -121,5 +121,29 @@ public class PaymentService {
                 .and(TransactionSpecifications.createdBetween(start, end));
 
         return walletTransactionRepository.findAll(spec, pageable);
+    }
+
+    public void createWithdrawRequest(Integer userId, BigDecimal withdrawAmount, String bankName, String bankAcc) {
+        if (withdrawAmount == null || withdrawAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Số tiền rút phải lớn hơn 0");
+        }
+
+        // Get balance of current user
+        Wallet wallet = walletRepository.findByUserId(userId).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy ví của người dùng: " + userId));
+        if (wallet.getBalance().compareTo(withdrawAmount) < 0) {
+            throw new IllegalArgumentException("Số dư không đủ. Số dư hiện tại: " + wallet.getBalance());
+        }
+
+        // Create request
+        WithdrawRequest withdrawRequest = new WithdrawRequest();
+        User user = new User();
+        user.setId(userId);
+        withdrawRequest.setUser(user);
+        withdrawRequest.setAmount(withdrawAmount);
+        withdrawRequest.setBankName(bankName);
+        withdrawRequest.setBankAcc(bankAcc);
+        withdrawRequest.setStatus(WithdrawRequestStatus.PENDING);
+        // Save to DB
+        withdrawRequestRepository.save(withdrawRequest);
     }
 }
