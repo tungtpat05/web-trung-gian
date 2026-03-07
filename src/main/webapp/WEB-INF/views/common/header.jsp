@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <header class="bg-white border-bottom p-3 d-flex justify-content-between align-items-center">
     <div></div>
@@ -12,7 +13,8 @@
                         4
                     </span>
                 </span>
-        <span>Số dư: <b>${user.wallet.balance}</b></span>
+        <span>Số dư: <b><fmt:formatNumber value="${user.wallet.balance}" pattern="#,###"/>đ</b></span>
+
 
         <!-- USER DROPDOWN -->
         <div class="dropdown">
