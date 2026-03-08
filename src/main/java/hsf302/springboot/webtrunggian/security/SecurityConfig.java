@@ -101,7 +101,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .loginPage("/auth/login")
                     .usernameParameter("username")
                     .passwordParameter("password")
-                    .loginProcessingUrl("/doLogin")//nhận thông tin từ loginPage do spring tự tạo
+                    .loginProcessingUrl("/auth/doLogin")//nhận thông tin từ loginPage do spring tự tạo
                     .defaultSuccessUrl("/home", true) //login success tự động đến page này
                     .failureUrl("/auth/login?error=true").permitAll()
             );

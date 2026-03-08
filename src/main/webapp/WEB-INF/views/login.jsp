@@ -30,7 +30,7 @@
 
 			<form class="login100-form validate-form"
 				  method="post"
-				  action="${pageContext.request.contextPath}/doLogin">
+				  action="${pageContext.request.contextPath}/auth/doLogin">
 
 				<span class="login100-form-title">
 					Member Login
@@ -103,7 +103,7 @@ setInterval(() => {
   fetch("/auth/status")
     .then(r => r.json())
     .then(ok => {
-      if (ok) window.location = "/auth/";
+      if (ok) window.location = "/home";
     });
 }, 1000);
 </script>

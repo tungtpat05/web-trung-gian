@@ -30,6 +30,7 @@ public class UserService implements UserDetailsService {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(userDetails.getUsername())
                     .password(userDetails.getPassword())
+                    .roles(userDetails.getRole().name())
                     .build();
         }else  {
             throw new UsernameNotFoundException("Username not found");
