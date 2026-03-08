@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="btn-dark">
-                        <a href="${pageContext.request.contextPath}/payment/deposit">Quay lại</a>
+                        <a href="${pageContext.request.contextPath}/wallet/payment">Quay lại</a>
                     </div>
                 </div>
             </div>

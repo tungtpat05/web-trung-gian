@@ -3,7 +3,7 @@ package hsf302.springboot.webtrunggian.controller;
 import hsf302.springboot.webtrunggian.entity.User;
 import hsf302.springboot.webtrunggian.entity.WalletTransaction;
 import hsf302.springboot.webtrunggian.entity.WithdrawRequest;
-import hsf302.springboot.webtrunggian.service.PaymentService;
+import hsf302.springboot.webtrunggian.service.WalletService;
 import hsf302.springboot.webtrunggian.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,22 +18,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Map;
 
 @Controller
-@RequestMapping
+@RequestMapping("/wallet")
 @AllArgsConstructor
-public class PaymentController {
+public class WalletController {
 
-    private PaymentService paymentService;
+    private WalletService walletService;
     private UserService userService;
 
-    @GetMapping("payment/deposit")
+    @GetMapping("/payment")
     public String depositForm() {
-        return "payment/deposit-form";
+        return "wallet/payment-form";
     }
 
-    @GetMapping("payment/deposit/qr")
+    @GetMapping("/payment/qr")
     public String depositQr(
             @RequestParam("internalCode") String internalCode,
             @RequestParam("amount") BigDecimal amount,
@@ -41,23 +40,23 @@ public class PaymentController {
     ) {
         model.addAttribute("internalCode", internalCode);
         model.addAttribute("amount", amount);
-        return "payment/deposit-qr";
+        return "wallet/payment-qr";
     }
 
     // User submits the deposit form, we redirect to the QR code page
-    @PostMapping("payment/deposit")
+    @PostMapping("/payment")
     public String createPaymentRequest(@RequestParam("amount") String amount, @ModelAttribute("currentUser") User currentUser, RedirectAttributes redirectAttributes) {
         BigDecimal depositAmount = new BigDecimal(amount);
-        String internalCode = paymentService.createDepositRequest(currentUser.getId(), depositAmount);
+        String internalCode = walletService.createDepositRequest(currentUser.getId(), depositAmount);
 
         redirectAttributes.addAttribute("internalCode", internalCode);
         redirectAttributes.addAttribute("amount", depositAmount);
 
-        return "redirect:/payment/deposit/qr";
+        return "redirect:/wallet/payment/qr";
     }
 
 
-    @GetMapping("payment/history")
+    @GetMapping("/stransactions")
     public String listTransactions(
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "type", required = false) String type,
@@ -72,21 +71,21 @@ public class PaymentController {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
         // Gọi Service với đầy đủ các tham số lọc
-        Page<WalletTransaction> transactionPage = paymentService.searchTransactions(id, type, startDate, endDate, pageable);
+        Page<WalletTransaction> transactionPage = walletService.searchTransactions(id, type, startDate, endDate, pageable);
 
         model.addAttribute("transactionPage", transactionPage);
 
-        return "payment/transaction-history";
+        return "wallet/transaction-history";
     }
 
     // Show form to create new withdraw request
-    @GetMapping("payment/withdraw-requests/new")
+    @GetMapping("/withdraw-requests/new")
     public String withdrawForm() {
-        return "payment/withdraw-form";
+        return "wallet/withdraw-form";
     }
 
     // Create new withdraw request
-    @PostMapping("payment/withdraw-requests")
+    @PostMapping("/withdraw-requests")
     public String createWithdrawRequest(
             @RequestParam("amount") String amount,
             @RequestParam("bank-name") String bankName,
@@ -98,16 +97,16 @@ public class PaymentController {
 
         try {
             // Create Withdraw Request
-            paymentService.createWithdrawRequest(currentUser.getId(), withdrawAmount, bankName, bankAcc);
+            walletService.createWithdrawRequest(currentUser.getId(), withdrawAmount, bankName, bankAcc);
             redirectAttributes.addFlashAttribute("successMessage", "Withdraw request created successfully!");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/payment/withdraw-requests/new";
+        return "redirect:/wallet/withdraw-requests/new";
     }
 
     // Show list of withdraw requests of current user
-    @GetMapping("payment/withdraw-requests")
+    @GetMapping("/withdraw-requests")
     public String listWithdrawRequest(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             Model model) {
@@ -116,15 +115,15 @@ public class PaymentController {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
         // Gọi Service với đầy đủ các tham số lọc
-        Page<WithdrawRequest> withdrawRequests = paymentService.searchWithDrawRequests(pageable);
+        Page<WithdrawRequest> withdrawRequests = walletService.searchWithDrawRequests(pageable);
 
         model.addAttribute("withdrawRequests", withdrawRequests);
 
-        return "payment/withdraw-list";
+        return "wallet/withdraw-list";
     }
 
     // User cancels a withdraw request
-    @PostMapping("payment/withdraw-requests/{withdrawRequestId}/cancel")
+    @PostMapping("/withdraw-requests/{withdrawRequestId}/cancel")
     public String cancelWithdrawRequest(
             @PathVariable Integer withdrawRequestId,
             @ModelAttribute("currentUser") User currentUser,
@@ -132,13 +131,13 @@ public class PaymentController {
     ) {
         try {
             User user = userService.findByUsername(currentUser.getUsername());
-            paymentService.cancelWithdrawRequest(withdrawRequestId, user.getId());
+            walletService.cancelWithdrawRequest(withdrawRequestId, user.getId());
             redirectAttributes.addFlashAttribute("successMessage", "Withdraw request cancelled successfully!");
             System.out.println("User " + currentUser.getId() + " cancelled withdraw request " + withdrawRequestId);
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             System.out.println("User " + currentUser.getId() + " failed to cancel withdraw request " + withdrawRequestId + ": " + e.getMessage());
         }
-        return "redirect:/payment/withdraw-requests";
+        return "redirect:/wallet/withdraw-requests";
     }
 }

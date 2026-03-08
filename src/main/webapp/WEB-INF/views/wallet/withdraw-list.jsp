@@ -66,7 +66,7 @@
         <main class="p-4">
             <div class="container-fluid bg-white p-4 border rounded shadow-sm">
                 <div class="d-flex justify-content-end mb-3">
-                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/payment/withdraw-requests/new">Tạo
+                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/wallet/withdraw-requests/new">Tạo
                         yêu cầu rút tiền</a>
                 </div>
                 <div class="row mb-4 align-items-center">
@@ -107,9 +107,6 @@
                                         <c:when test="${wr.status == 'COMPLETED'}">
                                             <span class="badge bg-success">Hoàn thành</span>
                                         </c:when>
-                                        <c:when test="${wr.status == 'REJECTED'}">
-                                            <span class="badge bg-danger">Từ chối</span>
-                                        </c:when>
                                         <c:when test="${wr.status == 'CANCELED'}">
                                             <span class="badge bg-dark">Đã huỷ</span>
                                         </c:when>
@@ -135,7 +132,7 @@
 
                                     <c:if test="${wr.status == 'PENDING'}">
                                         <form method="post"
-                                              action="${pageContext.request.contextPath}/payment/withdraw-requests/${wr.id}/cancel"
+                                              action="${pageContext.request.contextPath}/wallet/withdraw-requests/${wr.id}/cancel"
                                               onsubmit="return confirm('Bạn có chắc muốn huỷ yêu cầu rút tiền này?');">
                                             <button class="btn btn-sm btn-danger">
                                                 <i class="bi bi-trash"></i> Huỷ yêu cầu

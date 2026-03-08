@@ -1,7 +1,7 @@
 package hsf302.springboot.webtrunggian.entity.enums;
 
 public enum WalletTransactionType {
-    TOP_UP,
+    PAYMENT,
     WITHDRAW,
     BUY,
     SELL,
