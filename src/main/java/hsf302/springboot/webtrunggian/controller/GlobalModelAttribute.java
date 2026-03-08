@@ -13,7 +13,7 @@ public class GlobalModelAttribute {
 
     private final UserService userService;
 
-    @ModelAttribute("user")
+    @ModelAttribute("currentUser")
     public User populateCurrentUser(Authentication auth) {
         if (auth == null || !auth.isAuthenticated()
                 || auth.getPrincipal().equals("anonymousUser")) {
