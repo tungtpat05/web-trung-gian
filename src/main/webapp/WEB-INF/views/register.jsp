@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V1</title>
+	<title>Register</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -27,48 +29,50 @@
 				<img src="${pageContext.request.contextPath}/images/img-01.png" alt="IMG">
 			</div>
 
-			<form class="login100-form validate-form"
-				  method="post" onsubmit="return validateForm()"
-				  action="${pageContext.request.contextPath}/auth/doRegister">
+			<form:form class="login100-form validate-form"
+					   method="post"
+					   modelAttribute="user"
+					   action="${pageContext.request.contextPath}/auth/doRegister">
 
 				<span class="login100-form-title">
 					Sign Up
 				</span>
 
-				<!-- 🔧 CSRF token -->
+				<!-- CSRF -->
 				<input type="hidden"
 					   name="${_csrf.parameterName}"
 					   value="${_csrf.token}"/>
 
-				<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-					<input class="input100" type="email" name="email" placeholder="Email" value="${user.email}">
+				<div class="wrap-input100 validate-input">
+					<form:input path="email" class="input100" type="email" placeholder="Email"/>
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-envelope"></i>
 					</span>
+					<form:errors path="email" cssStyle="color:red"/>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate = "Valid username is required: a_Z_123">
-					<input class="input100" type="text" name="username" placeholder="Username" value="${user.username}">
+				<div class="wrap-input100 validate-input">
+					<form:input path="username" class="input100" placeholder="Username"/>
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-user"></i>
 					</span>
+					<form:errors path="username" cssStyle="color:red"/>
 				</div>
 
-				<div class="wrap-input100 validate-input" data-validate="Password is required">
-					<input class="input100" type="password" name="password" placeholder="Password">
+				<div class="wrap-input100 validate-input">
+					<form:password path="password" class="input100" placeholder="Password"/>
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-lock"></i>
 					</span>
+					<form:errors path="password" cssStyle="color:red"/>
 				</div>
-
-                <span id="error" style="color:red"></span><br>
 
 				<div class="container-login100-form-btn">
 					<button class="login100-form-btn" type="submit">
-						Sign In
+						Sign Up
 					</button>
 				</div>
 
@@ -80,10 +84,12 @@
 
 				<div class="text-center p-t-136">
 					<a class="txt2" href="${pageContext.request.contextPath}/auth/login">
-						Already Have Account? sign in
+						Already Have Account? Sign in
 					</a>
 				</div>
-			</form>
+
+			</form:form>
+
 		</div>
 	</div>
 </div>
@@ -95,19 +101,19 @@
 <script src="${pageContext.request.contextPath}/vendor/tilt/tilt.jquery.min.js"></script>
 
 <script>
-$('.js-tilt').tilt({
-	scale: 1.1
-})
+	$('.js-tilt').tilt({
+		scale: 1.1
+	})
 </script>
 
 <script>
-setInterval(() => {
-  fetch("/auth/status")
-    .then(r => r.json())
-    .then(ok => {
-      if (ok) window.location = "/home";
-    });
-}, 1000);
+	setInterval(() => {
+		fetch("${pageContext.request.contextPath}/auth/status")
+				.then(r => r.json())
+				.then(ok => {
+					if (ok) window.location = "${pageContext.request.contextPath}/home";
+				});
+	}, 1000);
 </script>
 
 <script src="${pageContext.request.contextPath}/js/main.js"></script>

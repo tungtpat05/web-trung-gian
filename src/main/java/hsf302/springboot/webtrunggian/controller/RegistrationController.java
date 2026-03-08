@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,19 +44,20 @@ public class RegistrationController {
 
 
     @GetMapping("/register")
-    public String register(Authentication auth) {
+    public String register(Authentication auth, Model model) {
         if (auth != null && auth.isAuthenticated()
                 && !(auth instanceof AnonymousAuthenticationToken)) {
             return "redirect:/home";
         }
-//        model.addAttribute("user", new User());
+        model.addAttribute("user", new User());
         return "register";
     }
 
     @PostMapping("/doRegister")
     public String doRegister(
-            @Valid User user,
-            BindingResult result
+            @Valid @ModelAttribute("user") User user,
+            BindingResult result,
+            Model model
     ) {
         System.out.println("REGISTER HIT");
         System.out.println(user);

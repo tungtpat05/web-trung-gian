@@ -46,7 +46,7 @@ public class PaymentController {
 
     // User submits the deposit form, we redirect to the QR code page
     @PostMapping("payment/deposit")
-    public String createPaymentRequest(@RequestParam("amount") String amount, @ModelAttribute("user") User currentUser, RedirectAttributes redirectAttributes) {
+    public String createPaymentRequest(@RequestParam("amount") String amount, @ModelAttribute("currentUser") User currentUser, RedirectAttributes redirectAttributes) {
         BigDecimal depositAmount = new BigDecimal(amount);
         String internalCode = paymentService.createDepositRequest(currentUser.getId(), depositAmount);
 
@@ -91,7 +91,7 @@ public class PaymentController {
             @RequestParam("amount") String amount,
             @RequestParam("bank-name") String bankName,
             @RequestParam("bank-acc") String bankAcc,
-            @ModelAttribute("user") User currentUser,
+            @ModelAttribute("currentUser") User currentUser,
             RedirectAttributes redirectAttributes
     ) {
         BigDecimal withdrawAmount = new BigDecimal(amount);
@@ -127,7 +127,7 @@ public class PaymentController {
     @PostMapping("payment/withdraw-requests/{withdrawRequestId}/cancel")
     public String cancelWithdrawRequest(
             @PathVariable Integer withdrawRequestId,
-            @ModelAttribute("user") User currentUser,
+            @ModelAttribute("currentUser") User currentUser,
             RedirectAttributes redirectAttributes
     ) {
         try {

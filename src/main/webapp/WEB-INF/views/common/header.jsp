@@ -13,7 +13,7 @@
                         4
                     </span>
                 </span>
-        <span>Số dư: <b><fmt:formatNumber value="${user.wallet.balance}" pattern="#,###"/>đ</b></span>
+        <span>Số dư: <b><fmt:formatNumber value="${currentUser.wallet.balance}" pattern="#,###"/>đ</b></span>
 
 
         <!-- USER DROPDOWN -->
@@ -23,7 +23,7 @@
                data-bs-toggle="dropdown"
                aria-expanded="false">
 
-                ${user.username}
+                ${currentUser.username}
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
