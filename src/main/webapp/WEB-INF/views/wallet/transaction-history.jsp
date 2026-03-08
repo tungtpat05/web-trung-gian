@@ -35,14 +35,14 @@
                         <h4 class="m-0"><i class="bi bi-clock-history me-2"></i>Lịch sử giao dịch</h4>
                     </div>
                     <div class="col-lg-9">
-                        <form action="${pageContext.request.contextPath}/payment/history" method="GET" class="row g-2 justify-content-end">
+                        <form action="${pageContext.request.contextPath}/wallet/transactions" method="GET" class="row g-2 justify-content-end">
                             <div class="col-md-2">
                                 <input type="number" name="id" class="form-control" placeholder="ID GD" value="${param.id}">
                             </div>
                             <div class="col-md-3">
                                 <select name="type" class="form-select">
                                     <option value="">-- Tất cả loại --</option>
-                                    <option value="TOP_UP" ${param.type == 'TOP_UP' ? 'selected' : ''}>Nạp tiền</option>
+                                    <option value="TOP_UP" ${param.type == 'PAYMENT' ? 'selected' : ''}>Nạp tiền</option>
                                     <option value="WITHDRAW" ${param.type == 'WITHDRAW' ? 'selected' : ''}>Rút tiền</option>
                                     <option value="BUY" ${param.type == 'BUY' ? 'selected' : ''}>Mua hàng</option>
                                     <option value="SELL" ${param.type == 'SELL' ? 'selected' : ''}>Bán hàng</option>
@@ -87,11 +87,11 @@
                                 <td class="text-muted">#${tx.id}</td>
                                 <td>
                                     <c:choose>
-                                        <c:when test="${tx.type == 'TOP_UP' || tx.type == 'REFUND' || tx.type == 'SELL' || tx.type == 'ESCROW_RELEASE'}">
+                                        <c:when test="${tx.type == 'PAYMENT' || tx.type == 'REFUND' || tx.type == 'SELL' || tx.type == 'ESCROW_RELEASE'}">
                                             <span class="badge bg-success-subtle text-success border border-success-subtle">
                                                 <i class="bi bi-arrow-down-left-circle me-1"></i>
                                                 <c:choose>
-                                                    <c:when test="${tx.type == 'TOP_UP'}">Nạp tiền</c:when>
+                                                    <c:when test="${tx.type == 'PAYMENT'}">Nạp tiền</c:when>
                                                     <c:when test="${tx.type == 'REFUND'}">Hoàn tiền</c:when>
                                                     <c:when test="${tx.type == 'SELL'}">Bán hàng</c:when>
                                                     <c:otherwise>Giải ngân</c:otherwise>

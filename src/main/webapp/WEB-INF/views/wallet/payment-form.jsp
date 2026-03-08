@@ -32,7 +32,7 @@
                     <h6 class="mb-0">Yêu cầu nạp tiền</h6>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="${pageContext.request.contextPath}/payment/deposit">
+                    <form method="post" action="${pageContext.request.contextPath}/wallet/payment">
 
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label text-end fw-bold">Số tiền (VND) (*)</label>

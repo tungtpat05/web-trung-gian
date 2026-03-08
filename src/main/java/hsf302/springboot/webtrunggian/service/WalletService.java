@@ -8,7 +8,6 @@ import hsf302.springboot.webtrunggian.entity.enums.WithdrawRequestStatus;
 import hsf302.springboot.webtrunggian.repository.*;
 import hsf302.springboot.webtrunggian.repository.specification.TransactionSpecifications;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,17 +15,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
-public class PaymentService {
+public class WalletService {
 
     private PaymentRequestRepository paymentRequestRepository;
     private ProviderTransactionRepository providerTransactionRepository;
@@ -122,7 +119,7 @@ public class PaymentService {
         // Log of Balance change (wallet_transactions)
         WalletTransaction walletTransaction = new WalletTransaction();
         walletTransaction.setWallet(wallet);
-        walletTransaction.setType(WalletTransactionType.TOP_UP);
+        walletTransaction.setType(WalletTransactionType.PAYMENT);
         walletTransaction.setAmount(amountPaid);
         walletTransaction.setBalanceBefore(oldBalance);
         walletTransaction.setBalanceAfter(wallet.getBalance());
@@ -131,7 +128,7 @@ public class PaymentService {
         walletTransactionRepository.save(walletTransaction);
 
         // Complete payment request
-        paymentRequest.setStatus(PaymentRequestStatus.SUCCESS);
+        paymentRequest.setStatus(PaymentRequestStatus.COMPLETED);
         paymentRequest.setCompletedAt(LocalDateTime.now());
         System.out.println("Payment request with internalCode: " + internalCode + " is completed. Amount paid: " + amountPaid);
         paymentRequestRepository.save(paymentRequest);

@@ -31,7 +31,7 @@
                 <ul class="nav flex-column gap-1">
 
                     <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/payment/deposit"
+                        <a href="${pageContext.request.contextPath}/wallet/payment"
                            class="nav-link text-light opacity-75">
                             <i class="bi bi-wallet2 me-2"></i>
                             Nạp tiền
@@ -39,7 +39,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/payment/history"
+                        <a href="${pageContext.request.contextPath}/wallet/stransactions"
                            class="nav-link text-light opacity-75">
                             <i class="bi bi-clock-history me-2"></i>
                             Lịch sử giao dịch
@@ -47,7 +47,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/payment/withdraw-requests"
+                        <a href="${pageContext.request.contextPath}/wallet/withdraw-requests"
                            class="nav-link text-light opacity-75">
                             <i class="bi bi-arrow-up-circle me-2"></i>
                             Yêu cầu rút tiền
