@@ -21,6 +21,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -54,13 +56,31 @@ public class PaymentService {
         return internalCode;
     }
 
+    private String extractDepositCode(String content) {
+        Pattern pattern = Pattern.compile("NAP\\d+");
+        Matcher matcher = pattern.matcher(content);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
+    }
+
+    private String extractWithdrawCode(String content) {
+        Pattern pattern = Pattern.compile("RUT\\d+");
+        Matcher matcher = pattern.matcher(content);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
+    }
+
     @Transactional
     public void processWebHookForDeposit(Map<String, Object> payload) {
         // Get data form payload
         String content = (String) payload.get("content");
-
-        // Cần xử lí lại vì mỗi ngân hàng gửi một content format khác nhau
-        String internalCode = content.substring(content.indexOf("NAP"));
+        System.out.println("Received webhook with content: " + content);
+        String internalCode = extractDepositCode(content);
+        System.out.println("Processing deposit webhook with internalCode: " + internalCode);
 
         // Find request in payment_requests with internal_code = internalCode
         PaymentRequest paymentRequest = paymentRequestRepository.findByInternalCode(internalCode).orElse(null);
@@ -187,9 +207,9 @@ public class PaymentService {
     public void processWebHookForWithdraw(Map<String, Object> payload) {
         // Get data form payload
         String content = (String) payload.get("content");
-
-        // Cần xử lí lại vì mỗi ngân hàng gửi một content format khác nhau
-        String internalCode = content.substring(content.indexOf("RUT"));
+        System.out.println("Received withdraw webhook with content: " + content);
+        String internalCode = extractWithdrawCode(content);
+        System.out.println("Processing withdraw webhook with internalCode: " + internalCode);
 
         // Find request in withdraw_requests with internal_code = internalCode
         WithdrawRequest withdrawRequest = withdrawRequestRepository.findByInternalCode(internalCode).orElse(null);
@@ -198,7 +218,7 @@ public class PaymentService {
             return;
         }
 
-        if (!withdrawRequest.getStatus().equals(PaymentRequestStatus.PENDING)) {
+        if (!withdrawRequest.getStatus().equals(WithdrawRequestStatus.PENDING)) {
             System.out.println("Withdraw request with internalCode: " + internalCode + " is not pending. Current status: " + withdrawRequest.getStatus());
             return;
         }

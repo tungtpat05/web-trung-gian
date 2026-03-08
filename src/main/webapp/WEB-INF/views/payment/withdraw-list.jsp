@@ -71,7 +71,7 @@
                 </div>
                 <div class="row mb-4 align-items-center">
                     <div class="col-lg-3">
-                        <h4 class="m-0"><i class="bi bi-clock-history me-2"></i>Yêu cầu rút tiền</h4>
+                        <h4 class="m-0">Yêu cầu rút tiền</h4>
                     </div>
                 </div>
 
