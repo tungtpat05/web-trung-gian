@@ -4,6 +4,7 @@ import hsf302.springboot.webtrunggian.entity.User;
 import hsf302.springboot.webtrunggian.entity.Wallet;
 import hsf302.springboot.webtrunggian.repository.UserRepository;
 import hsf302.springboot.webtrunggian.repository.WalletRepository;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,5 +51,13 @@ public class UserService implements UserDetailsService {
 
     public User findByUsername(String username) {
         return repo.findByUsername(username).orElse(null);
+    }
+
+    public boolean existsByEmail(String email) {
+        return repo.findByEmail(email).isPresent();
+    }
+
+    public boolean existsByUsername(String username) {
+        return repo.findByUsername(username).isPresent();
     }
 }

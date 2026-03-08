@@ -61,8 +61,33 @@ public class RegistrationController {
     ) {
         System.out.println("REGISTER HIT");
         System.out.println(user);
+
+        // Check cho @Valid
         if (result.hasErrors()) {
             return "register"; // quay lại JSP
+        }
+
+        // check email duplicate
+        if (userService.existsByEmail(user.getEmail())) {
+            result.rejectValue(
+                    "email",
+                    "error.user",
+                    "Email already exists"
+            );
+        }
+
+        // check username duplicate
+        if (userService.existsByUsername(user.getUsername())) {
+            result.rejectValue(
+                    "username",
+                    "error.user",
+                    "Username already exists"
+            );
+        }
+
+        // Check for logical errors
+        if (result.hasErrors()) {
+            return "register";
         }
 
         user.setPassword(encoder.encode(user.getPassword()));
