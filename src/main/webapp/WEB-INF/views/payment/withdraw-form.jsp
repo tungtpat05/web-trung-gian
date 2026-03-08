@@ -27,8 +27,69 @@
         <jsp:include page="../common/header.jsp"/>
 
         <main class="p-4">
-            <div class="bg-white p-4 border rounded shadow-sm" style="min-height: 500px;">
-                <h5 class="mb-4">Nạp vào là mất rồi, chưa rút được đâu</h5>
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">Yêu cầu rút tiền</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="${pageContext.request.contextPath}/payment/withdraw-requests">
+
+                        <div class="row mb-3">
+                            <label class="col-sm-3 col-form-label text-end fw-bold">Số tiền (VND) (*)</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" name="amount" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-3 col-form-label text-end fw-bold">Ngân hàng thụ hưởng (*)</label>
+                            <div class="col-sm-9">
+                                <select name="bank-name" class="form-select" required>
+                                    <option value="" disabled selected>Chọn ngân hàng</option>
+                                    <option value="VietinBank">Ngân hàng TMCP Công thương Việt Nam (VietinBank)</option>
+                                    <option value="Vietcombank">Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)</option>
+                                    <option value="MBBank">Ngân hàng TMCP Quân đội (MBBank)</option>
+                                    <option value="TPBank">Ngân hàng TMCP Tiên Phong (TPBank)</option>
+                                    <option value="VPBank">Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)</option>
+                                    <option value="BIDV">Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)</option>
+                                    <option value="Techcombank">Ngân hàng TMCP Kỹ thương Việt Nam (Techcombank)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-3 col-form-label text-end fw-bold">Số tài khoản thụ hưởng (*)</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="bank-acc" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-9 offset-sm-3 text-center">
+                                <button type="submit" class="btn btn-success px-4">
+                                    Tạo yêu cầu
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <c:if test="${not empty successMessage}">
+                <div class="alert alert-success mt-3" role="alert">
+                        ${successMessage}
+                </div>
+            </c:if>
+
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger mt-3" role="alert">
+                        ${errorMessage}
+                </div>
+            </c:if>
+
+            <div>
+                <a href="${pageContext.request.contextPath}/payment/withdraw-requests">Quay lại</a>
             </div>
 
         </main>

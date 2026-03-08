@@ -2,6 +2,7 @@ package hsf302.springboot.webtrunggian.controller;
 
 import hsf302.springboot.webtrunggian.entity.User;
 import hsf302.springboot.webtrunggian.entity.WalletTransaction;
+import hsf302.springboot.webtrunggian.entity.WithdrawRequest;
 import hsf302.springboot.webtrunggian.service.PaymentService;
 import hsf302.springboot.webtrunggian.service.UserService;
 import lombok.AllArgsConstructor;
@@ -55,10 +56,6 @@ public class PaymentController {
         return "redirect:/payment/deposit/qr";
     }
 
-    @GetMapping("payment/withdraw")
-    public String withdrawForm() {
-        return "payment/withdraw-form";
-    }
 
     @GetMapping("payment/history")
     public String listTransactions(
@@ -82,4 +79,66 @@ public class PaymentController {
         return "payment/transaction-history";
     }
 
+    // Show form to create new withdraw request
+    @GetMapping("payment/withdraw-requests/new")
+    public String withdrawForm() {
+        return "payment/withdraw-form";
+    }
+
+    // Create new withdraw request
+    @PostMapping("payment/withdraw-requests")
+    public String createWithdrawRequest(
+            @RequestParam("amount") String amount,
+            @RequestParam("bank-name") String bankName,
+            @RequestParam("bank-acc") String bankAcc,
+            @ModelAttribute("user") User currentUser,
+            RedirectAttributes redirectAttributes
+    ) {
+        BigDecimal withdrawAmount = new BigDecimal(amount);
+
+        try {
+            // Create Withdraw Request
+            paymentService.createWithdrawRequest(currentUser.getId(), withdrawAmount, bankName, bankAcc);
+            redirectAttributes.addFlashAttribute("successMessage", "Withdraw request created successfully!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/payment/withdraw-requests/new";
+    }
+
+    // Show list of withdraw requests of current user
+    @GetMapping("payment/withdraw-requests")
+    public String listWithdrawRequest(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            Model model) {
+
+        // 10 bản ghi mỗi trang, sắp xếp mới nhất lên đầu
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
+
+        // Gọi Service với đầy đủ các tham số lọc
+        Page<WithdrawRequest> withdrawRequests = paymentService.searchWithDrawRequests(pageable);
+
+        model.addAttribute("withdrawRequests", withdrawRequests);
+
+        return "payment/withdraw-list";
+    }
+
+    // User cancels a withdraw request
+    @PostMapping("payment/withdraw-requests/{withdrawRequestId}/cancel")
+    public String cancelWithdrawRequest(
+            @PathVariable Integer withdrawRequestId,
+            @ModelAttribute("user") User currentUser,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            User user = userService.findByUsername(currentUser.getUsername());
+            paymentService.cancelWithdrawRequest(withdrawRequestId, user.getId());
+            redirectAttributes.addFlashAttribute("successMessage", "Withdraw request cancelled successfully!");
+            System.out.println("User " + currentUser.getId() + " cancelled withdraw request " + withdrawRequestId);
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            System.out.println("User " + currentUser.getId() + " failed to cancel withdraw request " + withdrawRequestId + ": " + e.getMessage());
+        }
+        return "redirect:/payment/withdraw-requests";
+    }
 }

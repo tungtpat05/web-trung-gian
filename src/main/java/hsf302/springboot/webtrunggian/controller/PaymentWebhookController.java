@@ -19,8 +19,17 @@ public class PaymentWebhookController {
         // SePay sent data in JSON format
         System.out.println("Đã nhận dữ liệu từ SePay: " + payload);
 
+        // Check transferType
+        String transferType = (String) payload.get("transferType");
+
         // Process the webhook data
-        paymentService.processWebHook(payload);
+        if(transferType.equals("in")) {
+            System.out.println("Xử lý webhook cho giao dịch NẠP tiền");
+            paymentService.processWebHookForDeposit(payload);
+        } else if(transferType.equals("out")) {
+            System.out.println("Xử lý webhook cho giao dịch RÚT tiền");
+            paymentService.processWebHookForWithdraw(payload);
+        }
 
         return ResponseEntity.ok("Xác nhận đã nhận dữ liệu");
     }
