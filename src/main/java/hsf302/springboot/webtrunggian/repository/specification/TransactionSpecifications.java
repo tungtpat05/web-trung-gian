@@ -34,4 +34,9 @@ public class TransactionSpecifications {
             return cb.lessThanOrEqualTo(root.get("createdAt"), endDate.atTime(LocalTime.MAX));
         };
     }
+
+    public static Specification<WalletTransaction> hasUserId(Integer userId) {
+        return (root, query, cb) ->
+                cb.equal(root.get("wallet").get("user").get("id"), userId);
+    }
 }

@@ -89,6 +89,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                                     "/auth/status"
                             ).permitAll()
                             .requestMatchers("/api/sepay-webhook").permitAll()
+                            .requestMatchers("/wallet/stransactions").hasAnyRole("USER", "ADMIN")
+                            .requestMatchers("/wallet/**").hasRole("USER")
+                            .requestMatchers("/admin/**").hasRole("ADMIN")
                             .requestMatchers(
                                     "/home"
                             ).authenticated()//user đã đăng nhập

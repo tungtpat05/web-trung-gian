@@ -7,11 +7,13 @@
     </div>
 
     <ul class="nav flex-column gap-2">
-        <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/home" class="nav-link text-light">
-                <i class="bi bi-house-door me-2"></i> Trang chủ
-            </a>
-        </li>
+        <c:if test="${currentUser.role == 'USER'}">
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/home" class="nav-link text-light">
+                    <i class="bi bi-house-door me-2"></i> Trang chủ
+                </a>
+            </li>
+        </c:if>
         <li class="nav-item">
             <a class="nav-link text-light d-flex justify-content-between align-items-center"
                data-bs-toggle="collapse"
@@ -30,13 +32,15 @@
             <div class="collapse ps-4" id="paymentMenu">
                 <ul class="nav flex-column gap-1">
 
-                    <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/wallet/payment"
-                           class="nav-link text-light opacity-75">
-                            <i class="bi bi-wallet2 me-2"></i>
-                            Nạp tiền
-                        </a>
-                    </li>
+                    <c:if test="${currentUser.role == 'USER'}">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/wallet/payment"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-wallet2 me-2"></i>
+                                Nạp tiền
+                            </a>
+                        </li>
+                    </c:if>
 
                     <li class="nav-item">
                         <a href="${pageContext.request.contextPath}/wallet/stransactions"
@@ -46,26 +50,44 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="${pageContext.request.contextPath}/wallet/withdraw-requests"
-                           class="nav-link text-light opacity-75">
-                            <i class="bi bi-arrow-up-circle me-2"></i>
-                            Yêu cầu rút tiền
-                        </a>
-                    </li>
+                    <c:if test="${currentUser.role == 'USER'}">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/wallet/withdraw-requests"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-arrow-up-circle me-2"></i>
+                                Yêu cầu rút tiền
+                            </a>
+                        </li>
+                    </c:if>
+
+                    <c:if test="${currentUser.role == 'ADMIN'}">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/admin/wallet/withdraw-requests"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-arrow-up-circle me-2"></i>
+                                Xử lí yêu cầu rút tiền
+                            </a>
+                        </li>
+                    </c:if>
 
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/order" class="nav-link text-light">
-                <i class="bi bi-bag me-2"></i> Mua hàng
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="${pageContext.request.contextPath}/escrow" class="nav-link text-light">
-                <i class="bi bi-shield-check me-2"></i> Trung gian
-            </a>
-        </li>
+
+        <c:if test="${currentUser.role == 'USER'}">
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/order" class="nav-link text-light">
+                    <i class="bi bi-bag me-2"></i> Mua hàng
+                </a>
+            </li>
+        </c:if>
+
+        <c:if test="${currentUser.role == 'USER'}">
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/escrow" class="nav-link text-light">
+                    <i class="bi bi-shield-check me-2"></i> Trung gian
+                </a>
+            </li>
+        </c:if>
     </ul>
 </div>

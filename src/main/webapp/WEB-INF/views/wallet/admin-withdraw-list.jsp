@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yêu cầu rút tiền</title>
+    <title>Xử lí cầu rút tiền</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
@@ -65,13 +65,9 @@
 
         <main class="p-4">
             <div class="container-fluid bg-white p-4 border rounded shadow-sm">
-                <div class="d-flex justify-content-end mb-3">
-                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/wallet/withdraw-requests/new">Tạo
-                        yêu cầu rút tiền</a>
-                </div>
                 <div class="row mb-4 align-items-center">
                     <div class="col-lg-3">
-                        <h4 class="m-0">Yêu cầu rút tiền</h4>
+                        <h4 class="m-0">Xử lí yêu cầu rút tiền</h4>
                     </div>
                 </div>
 
@@ -81,6 +77,7 @@
                         <tr>
                             <th style="width: 80px;">STT</th>
                             <th>Mã yêu cầu rút</th>
+                            <th>Người thực hiện</th>
                             <th>Số tiền rút</th>
                             <th>Trạng thái</th>
                             <th>Ngân hàng thụ hưởng</th>
@@ -95,6 +92,7 @@
                             <tr>
                                 <td class="text-muted">${withdrawRequests.number * withdrawRequests.size + varStatus.index + 1}</td>
                                 <td>${wr.internalCode}</td>
+                                <td>${wr.user.username}</td>
                                 <td>
                                     <fmt:formatNumber value="${wr.amount}" pattern="#,###" var="formattedAmount"/>
                                         ${formattedAmount} đ
@@ -124,22 +122,17 @@
                                 <td class="small text-muted">
                                         ${wr.updatedAt}
                                 </td>
-                                <td>
-                                    <c:if test="${wr.status == 'PENDING'}">
-                                        <form method="post"
-                                              action="${pageContext.request.contextPath}/wallet/withdraw-requests/${wr.id}/cancel"
-                                              onsubmit="return confirm('Bạn có chắc muốn huỷ yêu cầu rút tiền này?');">
-                                            <button class="btn btn-sm btn-danger">
-                                                <i class="bi bi-trash"></i> Huỷ yêu cầu
-                                            </button>
-                                        </form>
-                                    </c:if>
+                                <td class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-outline-secondary"
+                                            onclick="openQRModal('${wr.bankName}','${wr.bankAcc}','${wr.amount}','${wr.internalCode}')">
+                                        <i class="bi bi-qr-code"></i>
+                                    </button>
                                 </td>
                             </tr>
                         </c:forEach>
                         <c:if test="${empty withdrawRequests.content}">
                             <tr>
-                                <td colspan="9" class="text-center py-4 text-muted">Không tìm thấy yêu cầu rút tiền
+                                <td colspan="10" class="text-center py-4 text-muted">Không tìm thấy yêu cầu rút tiền
                                     nào.
                                 </td>
                             </tr>
@@ -192,7 +185,54 @@
     </div>
 </div>
 
+<%--QR popup--%>
+<div class="modal fade" id="qrModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">QR chuyển khoản</h5>
+
+                <!-- X button -->
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body text-center">
+                <div id="qrContainer">
+                    <%-- Hiển thị ảnh --%>
+                    <img id="qrImage"
+                         class="img-fluid border p-2"
+                         style="max-width: 80%;">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function openQRModal(bankName, bankAcc, amount, internalCode) {
+        console.log(bankName, bankAcc, amount, internalCode);
+
+        let qrUrl = "https://qr.sepay.vn/img?acc=" + bankAcc +
+            "&bank=" + bankName +
+            "&amount=" + amount +
+            "&des=" + internalCode +
+            "&template=compact";
+        console.log(qrUrl);
+
+        document.getElementById("qrImage").src = qrUrl;
+
+        let modal = new bootstrap.Modal(document.getElementById("qrModal"));
+        modal.show();
+    }
+</script>
 
 </body>
 </html>

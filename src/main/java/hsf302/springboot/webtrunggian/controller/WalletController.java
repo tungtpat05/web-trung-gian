@@ -56,6 +56,7 @@ public class WalletController {
     }
 
 
+    // Service check User Role -> if Admin, show all transactions, else show only transactions of current user
     @GetMapping("/stransactions")
     public String listTransactions(
             @RequestParam(value = "id", required = false) Integer id,
@@ -65,13 +66,14 @@ public class WalletController {
             @RequestParam(value = "endDate", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @ModelAttribute("currentUser") User currentUser,
             Model model) {
 
         // 10 bản ghi mỗi trang, sắp xếp mới nhất lên đầu
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
         // Gọi Service với đầy đủ các tham số lọc
-        Page<WalletTransaction> transactionPage = walletService.searchTransactions(id, type, startDate, endDate, pageable);
+        Page<WalletTransaction> transactionPage = walletService.searchTransactions(id, type, startDate, endDate, pageable, currentUser);
 
         model.addAttribute("transactionPage", transactionPage);
 
@@ -107,15 +109,16 @@ public class WalletController {
 
     // Show list of withdraw requests of current user
     @GetMapping("/withdraw-requests")
-    public String listWithdrawRequest(
+    public String listWithdrawRequestOfCurrentUser(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @ModelAttribute("currentUser") User currentUser,
             Model model) {
 
         // 10 bản ghi mỗi trang, sắp xếp mới nhất lên đầu
         Pageable pageable = PageRequest.of(page, 10, Sort.by("createdAt").descending());
 
         // Gọi Service với đầy đủ các tham số lọc
-        Page<WithdrawRequest> withdrawRequests = walletService.searchWithDrawRequests(pageable);
+        Page<WithdrawRequest> withdrawRequests = walletService.searchWithDrawRequestsOfCurrentUser(currentUser.getId(), pageable);
 
         model.addAttribute("withdrawRequests", withdrawRequests);
 

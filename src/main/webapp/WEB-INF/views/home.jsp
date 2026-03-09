@@ -26,13 +26,23 @@
     <div class="main-content">
         <jsp:include page="common/header.jsp"/>
 
-        <main class="p-4">
-            <div class="bg-white p-4 border rounded shadow-sm" style="min-height: 500px;">
-                <h5 class="mb-4">Kho dịch vụ cá nhân</h5>
-                <p class="text-muted">Nội dung main content nằm ở đây...</p>
-            </div>
+        <c:if test="${currentUser.role == 'USER'}">
+            <main class="p-4">
+                <div class="bg-white p-4 border rounded shadow-sm" style="min-height: 500px;">
+                    <h5 class="mb-4">Kho dịch vụ cá nhân</h5>
+                    <p class="text-muted">Nội dung main content nằm ở đây...</p>
+                </div>
+            </main>
+        </c:if>
 
-        </main>
+        <c:if test="${currentUser.role == 'ADMIN'}">
+            <main class="p-4">
+                <div class="bg-white p-4 border rounded shadow-sm" style="min-height: 500px;">
+                    <h5 class="mb-4">ADMIN Dashboard</h5>
+                    <p class="text-muted">Nội dung main content nằm ở đây...</p>
+                </div>
+            </main>
+        </c:if>
     </div>
 </div>
 

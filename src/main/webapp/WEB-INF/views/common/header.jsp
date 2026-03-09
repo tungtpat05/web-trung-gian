@@ -13,7 +13,9 @@
                         4
                     </span>
                 </span>
-        <span>Số dư: <b><fmt:formatNumber value="${currentUser.wallet.balance}" pattern="#,###"/>đ</b></span>
+        <c:if test="${currentUser.role == 'USER'}">
+            <span>Số dư: <b><fmt:formatNumber value="${currentUser.wallet.balance}" pattern="#,###"/>đ</b></span>
+        </c:if>
 
 
         <!-- USER DROPDOWN -->

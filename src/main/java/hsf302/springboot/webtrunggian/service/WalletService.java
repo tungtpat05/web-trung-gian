@@ -1,10 +1,7 @@
 package hsf302.springboot.webtrunggian.service;
 
 import hsf302.springboot.webtrunggian.entity.*;
-import hsf302.springboot.webtrunggian.entity.enums.PaymentRequestStatus;
-import hsf302.springboot.webtrunggian.entity.enums.WalletTransactionReferenceType;
-import hsf302.springboot.webtrunggian.entity.enums.WalletTransactionType;
-import hsf302.springboot.webtrunggian.entity.enums.WithdrawRequestStatus;
+import hsf302.springboot.webtrunggian.entity.enums.*;
 import hsf302.springboot.webtrunggian.repository.*;
 import hsf302.springboot.webtrunggian.repository.specification.TransactionSpecifications;
 import lombok.AllArgsConstructor;
@@ -134,11 +131,14 @@ public class WalletService {
         paymentRequestRepository.save(paymentRequest);
     }
 
-    public Page<WalletTransaction> searchTransactions(Integer id, String type, LocalDate start, LocalDate end, Pageable pageable) {
+    public Page<WalletTransaction> searchTransactions(Integer id, String type, LocalDate start, LocalDate end, Pageable pageable, User currentUser) {
         Specification<WalletTransaction> spec = Specification.where(TransactionSpecifications.hasId(id))
                 .and(TransactionSpecifications.hasType(type))
                 .and(TransactionSpecifications.createdBetween(start, end));
 
+        if (currentUser.getRole() == UserRole.USER) {
+            spec = spec.and(TransactionSpecifications.hasUserId(currentUser.getId()));
+        }
         return walletTransactionRepository.findAll(spec, pageable);
     }
 
@@ -177,6 +177,10 @@ public class WalletService {
 
     public Page<WithdrawRequest> searchWithDrawRequests(Pageable pageable) {
         return withdrawRequestRepository.findAll(pageable);
+    }
+
+    public Page<WithdrawRequest> searchWithDrawRequestsOfCurrentUser(Integer userId, Pageable pageable) {
+        return withdrawRequestRepository.findByUserId(userId, pageable);
     }
 
     @Transactional
