@@ -37,11 +37,11 @@
                     <div class="col-lg-9">
                         <form action="${pageContext.request.contextPath}/wallet/transactions" method="GET" class="row g-2 justify-content-end">
                             <div class="col-md-2">
-                                <input type="number" name="id" class="form-control" placeholder="ID GD" value="${param.id}">
+                                <input type="number" name="id" class="form-control" placeholder="Mã giao dịch" value="${param.id}">
                             </div>
                             <div class="col-md-3">
                                 <select name="type" class="form-select">
-                                    <option value="">-- Tất cả loại --</option>
+                                    <option value="">Loại giao dịch</option>
                                     <option value="TOP_UP" ${param.type == 'PAYMENT' ? 'selected' : ''}>Nạp tiền</option>
                                     <option value="WITHDRAW" ${param.type == 'WITHDRAW' ? 'selected' : ''}>Rút tiền</option>
                                     <option value="BUY" ${param.type == 'BUY' ? 'selected' : ''}>Mua hàng</option>
@@ -71,12 +71,13 @@
                     <table class="table table-hover align-middle border-top">
                         <thead>
                         <tr>
-                            <th style="width: 80px;">ID</th>
+                            <th>Mã giao dịch</th>
+                            <th>Người tạo giao dịch</th>
                             <th>Loại giao dịch</th>
                             <th>Tham chiếu</th>
-                            <th class="text-end">Số tiền giao dịch</th>
-                            <th class="text-end">Số dư trước</th>
-                            <th class="text-end">Số dư sau</th>
+                            <th>Số tiền giao dịch</th>
+                            <th>Số dư trước</th>
+                            <th>Số dư sau</th>
                             <th>Ngày tạo</th>
                             <th>Ghi chú</th>
                         </tr>
@@ -85,6 +86,7 @@
                         <c:forEach var="tx" items="${transactionPage.content}">
                             <tr>
                                 <td class="text-muted">#${tx.id}</td>
+                                <td>${tx.wallet.user.username}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${tx.type == 'PAYMENT' || tx.type == 'REFUND' || tx.type == 'SELL' || tx.type == 'ESCROW_RELEASE'}">
@@ -119,13 +121,13 @@
                                     <span class="text-uppercase fw-semibold small text-secondary">${tx.referenceType}</span>
                                     <div class="small text-primary">ID: #${tx.referenceId}</div>
                                 </td>
-                                <td class="text-end ${tx.amount > 0 ? 'amount-pos' : 'amount-neg'}">
+                                <td class="${tx.amount > 0 ? 'amount-pos' : 'amount-neg'}">
                                     <c:if test="${tx.amount > 0}">+</c:if><fmt:formatNumber value="${tx.amount}" pattern="#,###"/> đ
                                 </td>
-                                <td class="text-end fw-semibold">
+                                <td class="fw-semibold">
                                     <fmt:formatNumber value="${tx.balanceBefore}" pattern="#,###"/> đ
                                 </td>
-                                <td class="text-end fw-semibold">
+                                <td class="fw-semibold">
                                     <fmt:formatNumber value="${tx.balanceAfter}" pattern="#,###"/> đ
                                 </td>
                                 <td class="small text-muted">
@@ -138,7 +140,7 @@
                         </c:forEach>
                         <c:if test="${empty transactionPage.content}">
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">Không tìm thấy giao dịch nào.</td>
+                                <td colspan="9" class="text-center py-4 text-muted">Không tìm thấy giao dịch nào.</td>
                             </tr>
                         </c:if>
                         </tbody>
