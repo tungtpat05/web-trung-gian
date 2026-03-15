@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Reset Password</title>
+	<title>Login V1</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -30,11 +30,11 @@
 
 			<form:form class="login100-form validate-form"
 				  method="post"
-				  action="${pageContext.request.contextPath}/auth/doReset"
-				  modelAttribute="user">
+				  action="${pageContext.request.contextPath}/auth/doNewPassword"
+				  modelAttribute="passwordForm">
 
 				<span class="login100-form-title">
-					Get Account Details
+					Create new password
 				</span>
 
 				<!-- 🔧 CSRF token -->
@@ -42,26 +42,43 @@
 					   name="${_csrf.parameterName}"
 					   value="${_csrf.token}"/>
 
-				<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-					<form:input class="input100" type="email" path="email" placeholder="Email" />
+				<input type="hidden" name="token" value="${token}"/>
+
+				<div class="wrap-input100 validate-input" data-validate = "New password is required">
+					<form:input class="input100" type="password" path="newPassword" placeholder="New Password" />
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
-						<i class="fa fa-envelope"></i>
+						<i class="fa fa-lock"></i>
 					</span>
 				</div>
-				<form:errors path="email" cssClass="text-danger" />
+				<form:errors path="newPassword" cssClass="text-danger" />
+
+				<div class="wrap-input100 validate-input" data-validate = "Passwords do not match.">
+					<form:input class="input100" type="password" path="confirmPassword" placeholder="Confirm Password" />
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-check"></i>
+					</span>
+				</div>
+				<form:errors path="confirmPassword" cssClass="text-danger" />
 
 				<div class="container-login100-form-btn">
 					<button class="login100-form-btn" type="submit">
-						Set Verification To Email
+						Reset Password
 					</button>
 				</div>
 
+				<div class="text-center p-t-12">
+					<a class="txt2" href="${pageContext.request.contextPath}/auth/reset">
+						Forgot Username / Password?
+					</a>
+				</div>
+
 				<div class="text-center p-t-136">
-                	<a class="txt2" href="${pageContext.request.contextPath}/auth/login">
-                	    Go Back
-                	</a>
-                </div>
+					<a class="txt2" href="${pageContext.request.contextPath}/auth/register">
+						Create your Account
+					</a>
+				</div>
 			</form:form>
 		</div>
 	</div>

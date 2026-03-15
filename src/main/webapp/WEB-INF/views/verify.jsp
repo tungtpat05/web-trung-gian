@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Reset Password</title>
+	<title>Verify</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -30,11 +30,11 @@
 
 			<form:form class="login100-form validate-form"
 				  method="post"
-				  action="${pageContext.request.contextPath}/auth/doReset"
-				  modelAttribute="user">
+				  action="${pageContext.request.contextPath}/auth/doVerify"
+				  modelAttribute="passwordReset">
 
 				<span class="login100-form-title">
-					Get Account Details
+					Enter OTP from email:
 				</span>
 
 				<!-- 🔧 CSRF token -->
@@ -42,24 +42,26 @@
 					   name="${_csrf.parameterName}"
 					   value="${_csrf.token}"/>
 
-				<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-					<form:input class="input100" type="email" path="email" placeholder="Email" />
+				<input type="hidden" name="token" value="${token}"/>
+
+				<div class="wrap-input100 validate-input" data-validate = "Mã OTP không đúng hoặc token đã hết hạn.">
+					<form:input class="input100" type="text" path="otp" placeholder="otp" />
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-envelope"></i>
 					</span>
 				</div>
-				<form:errors path="email" cssClass="text-danger" />
+				<form:errors path="otp" cssClass="text-danger" />
 
 				<div class="container-login100-form-btn">
 					<button class="login100-form-btn" type="submit">
-						Set Verification To Email
+						Verify
 					</button>
 				</div>
 
 				<div class="text-center p-t-136">
                 	<a class="txt2" href="${pageContext.request.contextPath}/auth/login">
-                	    Go Back
+                	    Remember Password?
                 	</a>
                 </div>
 			</form:form>

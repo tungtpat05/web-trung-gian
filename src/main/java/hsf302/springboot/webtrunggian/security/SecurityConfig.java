@@ -85,7 +85,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                                     "/auth/login",
                                     "/auth/register",
                                     "/auth/doRegister",
-                                    "/auth/reset",
+                                    "/auth/reset**",
+                                    "/auth/doReset",
+                                    "/auth/verify**",
+                                    "/auth/doVerify",
+                                    "/auth/newPassword**",
+                                    "/auth/doNewPassword",
                                     "/auth/status"
                             ).permitAll()
                             .requestMatchers("/api/sepay-webhook").permitAll()
@@ -108,7 +113,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .defaultSuccessUrl("/home", true) //login success tự động đến page này
                     .failureUrl("/auth/login?error=true").permitAll()
             );
-
     return http.build();
 }
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repo;
-
+    
     @Autowired
     private WalletRepository walletRepository;
 

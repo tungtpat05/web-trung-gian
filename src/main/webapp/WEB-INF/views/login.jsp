@@ -100,10 +100,10 @@ $('.js-tilt').tilt({
 
 <script>
 setInterval(() => {
-  fetch("/auth/status")
+  fetch("${pageContext.request.contextPath}/auth/status")
     .then(r => r.json())
     .then(ok => {
-      if (ok) window.location = "/home";
+      if (ok) window.location = "${pageContext.request.contextPath}/home";
     });
 }, 1000);
 </script>
