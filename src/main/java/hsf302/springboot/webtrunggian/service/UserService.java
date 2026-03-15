@@ -6,6 +6,7 @@ import hsf302.springboot.webtrunggian.repository.UserRepository;
 import hsf302.springboot.webtrunggian.repository.WalletRepository;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +25,7 @@ public class UserService implements UserDetailsService {
     private WalletRepository walletRepository;
 
     @Override
+    @NullMarked
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = repo.findByUsername(username);
         if (user.isPresent()) {

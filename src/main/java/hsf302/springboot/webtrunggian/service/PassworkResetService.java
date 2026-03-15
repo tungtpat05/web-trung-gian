@@ -42,17 +42,6 @@ public class PassworkResetService {
 
         tokenRepository.save(resetToken);
     }
-    
-    public boolean verifyOTP(String otp, String token){
-
-        PasswordReset tokenResult = TokenCheck(token);
-        
-        if(tokenResult == null)
-            return false;
-
-        return tokenResult.getOtp().equals(otp);
-    }
-
     public PasswordReset TokenCheck(String token){
 
         PasswordReset resetToken = tokenRepository.findByToken(token)

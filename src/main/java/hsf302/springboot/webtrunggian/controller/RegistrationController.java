@@ -27,9 +27,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class RegistrationController {
 
-    private Random random;
     public String generateOTP() {
-        random = new Random();
+        Random random = new Random();
         int otp = 100000 + random.nextInt(900000);
         return String.valueOf(otp);
     }
@@ -265,6 +264,7 @@ public class RegistrationController {
         PasswordReset tokenResult = passworkResetService.TokenCheck(token);
         if (tokenResult == null) {
             result.rejectValue("newPassword", "error.token", "Token hết hạn");
+            return "newPassword";
         }
 
         if (!result.hasFieldErrors("confirmPassword")
@@ -281,9 +281,14 @@ public class RegistrationController {
             return "newPassword";
         }
 
-        User user = tokenResult.getUser();
-        user.setPassword(encoder.encode(passwordForm.getNewPassword()));
-        userRepository.save(user);
+        User user = null;
+        user = tokenResult.getUser();
+        if (user != null) {
+            user.setPassword(encoder.encode(passwordForm.getNewPassword()));
+        }
+        if (user != null) {
+            userRepository.save(user);
+        }
         passworkResetService.deleteToken(tokenResult);
 
         return "redirect:/auth/login";
