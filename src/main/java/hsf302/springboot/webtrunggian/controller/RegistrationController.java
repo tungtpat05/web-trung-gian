@@ -68,7 +68,7 @@ public class RegistrationController {
         // "no-cache, no-store, must-revalidate");
         // response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 86400000);// giới hạn cache
-        return "login";
+        return "registration/login";
     }
 
     /*
@@ -82,7 +82,7 @@ public class RegistrationController {
             return "redirect:/home";
         }
         model.addAttribute("user", new User());
-        return "register";
+        return "registration/register";
     }
 
     @PostMapping("/doRegister")
@@ -95,7 +95,7 @@ public class RegistrationController {
 
         // Check cho @Valid
         if (result.hasErrors()) {
-            return "register"; // quay lại JSP
+            return "registration/register"; // quay lại JSP
         }
 
         // check email duplicate
@@ -116,7 +116,7 @@ public class RegistrationController {
 
         // Check for logical errors
         if (result.hasErrors()) {
-            return "register";
+            return "registration/register";
         }
 
         user.setPassword(encoder.encode(user.getPassword()));
@@ -140,7 +140,7 @@ public class RegistrationController {
             return "redirect:/home";
         }
         model.addAttribute("user", new User());
-        return "reset";
+        return "registration/reset";
     }
 
     @PostMapping("/doReset")
@@ -150,7 +150,7 @@ public class RegistrationController {
         ) {
         System.out.println("RESET HIT!");
         if (result.hasErrors()) {
-            return "reset"; // quay lại JSP
+            return "registration/reset"; // quay lại JSP
         }
         // check email duplicate
         if (userService.existsByEmail(user.getEmail())) {
@@ -172,7 +172,7 @@ public class RegistrationController {
 
 
         result.rejectValue("email", "error.email", "Email doesn't exists");
-        return "reset";
+        return "registration/reset";
     }
     /*
      * =============================================================================
@@ -191,7 +191,7 @@ public class RegistrationController {
 
         model.addAttribute("passwordReset", new PasswordReset());
         model.addAttribute("token", token);
-        return "verify";
+        return "registration/verify";
     }
     @PostMapping("/doVerify")
     public String doVerify(
@@ -204,23 +204,23 @@ public class RegistrationController {
 
         model.addAttribute("token", token);
         if (result.hasErrors()) {
-            return "verify"; // quay lại JSP
+            return "registration/verify"; // quay lại JSP
         }
 
         if (pReset.getOtp() == null || pReset.getOtp().trim().isEmpty()) {
             result.rejectValue("otp", "error.otp", "Mã OTP ko hợp");
-            return "verify";
+            return "registration/verify";
         }
 
         PasswordReset tokenResult = passworkResetService.TokenCheck(token);
         if (tokenResult == null) {
             result.rejectValue("otp", "error.token", "Token hết hạn");
-            return "verify";
+            return "registration/verify";
         }
 
         if (!tokenResult.getOtp().equals(pReset.getOtp())) {
             result.rejectValue("otp", "error.otp", "Mã OTP ko hợp");
-            return "verify";
+            return "registration/verify";
         }
 
         return "redirect:/auth/newPassword?token=" + token;
@@ -247,7 +247,7 @@ public class RegistrationController {
         }
 
         model.addAttribute("token", token);
-        return "newPassword";
+        return "registration/newPassword";
     }
 
     @PostMapping("/doNewPassword")
@@ -264,7 +264,7 @@ public class RegistrationController {
         PasswordReset tokenResult = passworkResetService.TokenCheck(token);
         if (tokenResult == null) {
             result.rejectValue("newPassword", "error.token", "Token hết hạn");
-            return "newPassword";
+            return "registration/newPassword";
         }
 
         if (!result.hasFieldErrors("confirmPassword")
@@ -278,7 +278,7 @@ public class RegistrationController {
         }
 
         if (result.hasErrors()) {
-            return "newPassword";
+            return "registration/newPassword";
         }
 
         User user = null;
@@ -319,9 +319,10 @@ public class RegistrationController {
     }
 
     @GetMapping("/admin/adminProfile")
-    @ResponseBody
+//    @ResponseBody
     @PreAuthorize("hasRole('ADMIN')") // chỉ cho ADMIN role
     public String adminProfile() {
-        return "Welcome to Admin Profile";
+//        return "Welcome to Admin Profile";
+        return "registration/adminProfile";
     }
 }

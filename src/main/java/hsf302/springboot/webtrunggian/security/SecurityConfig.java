@@ -38,7 +38,6 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-
 //    @Bean
 //    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
 //        /*
@@ -91,7 +90,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                                     "/auth/doVerify",
                                     "/auth/newPassword**",
                                     "/auth/doNewPassword",
-                                    "/auth/status"
+                                    "/auth/status",
+                                    "/profile/user",
+                                    "/profile/update-username"
                             ).permitAll()
                             .requestMatchers("/api/sepay-webhook").permitAll()
                             .requestMatchers("/wallet/stransactions").hasAnyRole("USER", "ADMIN")

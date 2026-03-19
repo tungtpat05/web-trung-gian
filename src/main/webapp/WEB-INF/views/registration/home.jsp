@@ -21,10 +21,10 @@
 <body>
 <div class="d-flex">
 
-    <jsp:include page="common/sidebar.jsp"/>
+    <jsp:include page="../common/sidebar.jsp"/>
 
     <div class="main-content">
-        <jsp:include page="common/header.jsp"/>
+        <jsp:include page="../common/header.jsp"/>
 
         <c:if test="${currentUser.role == 'USER'}">
             <main class="p-4">
