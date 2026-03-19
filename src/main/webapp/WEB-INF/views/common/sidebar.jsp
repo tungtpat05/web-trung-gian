@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="sidebar bg-dark text-light p-3" style="width: 250px; min-height: 100vh;">
@@ -65,7 +65,7 @@
                             <a href="${pageContext.request.contextPath}/admin/wallet/withdraw-requests"
                                class="nav-link text-light opacity-75">
                                 <i class="bi bi-arrow-up-circle me-2"></i>
-                                Xử lí yêu cầu rút tiền
+                                Xử lý yêu cầu rút tiền
                             </a>
                         </li>
                     </c:if>
@@ -78,6 +78,14 @@
             <li class="nav-item">
                 <a href="${pageContext.request.contextPath}/order" class="nav-link text-light">
                     <i class="bi bi-bag me-2"></i> Mua hàng
+                </a>
+            </li>
+        </c:if>
+
+        <c:if test="${currentUser.role == 'USER'}">
+            <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/market" class="nav-link text-light">
+                    <i class="bi bi-shop me-2"></i> Chợ công khai
                 </a>
             </li>
         </c:if>
@@ -127,3 +135,4 @@
         </li>
     </ul>
 </div>
+
