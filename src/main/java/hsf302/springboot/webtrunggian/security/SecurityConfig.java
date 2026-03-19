@@ -38,7 +38,6 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-
 //    @Bean
 //    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
 //        /*
@@ -85,8 +84,15 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                                     "/auth/login",
                                     "/auth/register",
                                     "/auth/doRegister",
-                                    "/auth/reset",
-                                    "/auth/status"
+                                    "/auth/reset**",
+                                    "/auth/doReset",
+                                    "/auth/verify**",
+                                    "/auth/doVerify",
+                                    "/auth/newPassword**",
+                                    "/auth/doNewPassword",
+                                    "/auth/status",
+                                    "/profile/user",
+                                    "/profile/update-username"
                             ).permitAll()
                             .requestMatchers("/api/sepay-webhook").permitAll()
                             .requestMatchers("/wallet/stransactions").hasAnyRole("USER", "ADMIN")
@@ -108,7 +114,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .defaultSuccessUrl("/home", true) //login success tự động đến page này
                     .failureUrl("/auth/login?error=true").permitAll()
             );
-
     return http.build();
 }
 }

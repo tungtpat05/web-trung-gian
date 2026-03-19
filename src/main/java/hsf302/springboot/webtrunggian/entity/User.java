@@ -3,13 +3,9 @@ package hsf302.springboot.webtrunggian.entity;
 import hsf302.springboot.webtrunggian.entity.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

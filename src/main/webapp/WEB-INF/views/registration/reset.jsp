@@ -1,8 +1,9 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V1</title>
+	<title>Reset Password</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -27,9 +28,10 @@
 				<img src="${pageContext.request.contextPath}/images/img-01.png" alt="IMG">
 			</div>
 
-			<form class="login100-form validate-form"
+			<form:form class="login100-form validate-form"
 				  method="post"
-				  action="${pageContext.request.contextPath}/doReset">
+				  action="${pageContext.request.contextPath}/auth/doReset"
+				  modelAttribute="user">
 
 				<span class="login100-form-title">
 					Get Account Details
@@ -41,12 +43,13 @@
 					   value="${_csrf.token}"/>
 
 				<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-					<input class="input100" type="email" name="email" placeholder="Email">
+					<form:input class="input100" type="email" path="email" placeholder="Email" />
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-envelope"></i>
 					</span>
 				</div>
+				<form:errors path="email" cssClass="text-danger" />
 
 				<div class="container-login100-form-btn">
 					<button class="login100-form-btn" type="submit">
@@ -59,7 +62,7 @@
                 	    Go Back
                 	</a>
                 </div>
-			</form>
+			</form:form>
 		</div>
 	</div>
 </div>
@@ -78,10 +81,10 @@ $('.js-tilt').tilt({
 
 <script>
 setInterval(() => {
-  fetch("/auth/status")
+  fetch("${pageContext.request.contextPath}/auth/status")
     .then(r => r.json())
     .then(ok => {
-      if (ok) window.location = "/auth/";
+      if (ok) window.location = "${pageContext.request.contextPath}/home";
     });
 }, 1000);
 </script>

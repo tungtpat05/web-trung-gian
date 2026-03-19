@@ -16,7 +16,8 @@ public class GlobalModelAttribute {
     @ModelAttribute("currentUser")
     public User populateCurrentUser(Authentication auth) {
         if (auth == null || !auth.isAuthenticated()
-                || auth.getPrincipal().equals("anonymousUser")) {
+                || auth.getPrincipal().equals("anonymousUser")
+        ) {
             return null;
         }
 

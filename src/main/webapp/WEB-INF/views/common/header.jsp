@@ -30,7 +30,7 @@
 
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
                 <li>
-                    <a class="dropdown-item d-flex align-items-center" href="#">
+                    <a class="dropdown-item d-flex align-items-center" href="${pageContext.request.contextPath}/profile/user">
                         <i class="bi bi-person me-2"></i>
                         Thông tin người dùng
                     </a>
