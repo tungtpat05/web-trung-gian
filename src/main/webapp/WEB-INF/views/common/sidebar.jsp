@@ -89,5 +89,41 @@
                 </a>
             </li>
         </c:if>
+
+        <li class="nav-item">
+            <a class="nav-link text-light d-flex justify-content-between align-items-center"
+               data-bs-toggle="collapse"
+               href="#disputeMenu"
+               role="button"
+               aria-expanded="false">
+                <span>
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Khiếu nại
+                </span>
+                <i class="bi bi-chevron-down small"></i>
+            </a>
+            <div class="collapse ps-4" id="disputeMenu">
+                <ul class="nav flex-column gap-1">
+                    <c:if test="${currentUser.role == 'ADMIN'}">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/admin/dispute/list"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-list-task me-2"></i>
+                                Quản lý khiếu nại
+                            </a>
+                        </li>
+                    </c:if>
+                    <c:if test="${currentUser.role == 'USER'}">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/dispute/my-disputes"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-person-badge me-2"></i>
+                                Khiếu nại của tôi
+                            </a>
+                        </li>
+                    </c:if>
+                </ul>
+            </div>
+        </li>
     </ul>
 </div>

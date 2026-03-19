@@ -248,4 +248,95 @@ public class WalletService {
         System.out.println("Withdraw request with internalCode: " + internalCode + " is completed. Amount paid: " + transferAmount);
         withdrawRequestRepository.save(withdrawRequest);
     }
+
+    @Transactional
+    public void lockEscrow(Integer userId, BigDecimal amount, Integer orderId) {
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy ví của người dùng: " + userId));
+        
+        if (wallet.getBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Số dư không đủ để thực hiện giao dịch.");
+        }
+
+        BigDecimal oldBalance = wallet.getBalance();
+        BigDecimal oldLocked = wallet.getLockedBalance();
+
+        wallet.setBalance(oldBalance.subtract(amount));
+        wallet.setLockedBalance(oldLocked.add(amount));
+        walletRepository.save(wallet);
+
+        // Log transaction
+        WalletTransaction tx = new WalletTransaction();
+        tx.setWallet(wallet);
+        tx.setType(WalletTransactionType.ESCROW_LOCK);
+        tx.setAmount(amount);
+        tx.setBalanceBefore(oldBalance);
+        tx.setBalanceAfter(wallet.getBalance());
+        tx.setReferenceType(WalletTransactionReferenceType.ORDER);
+        tx.setReferenceId(orderId);
+        tx.setNote("Khóa tiền treo cho đơn hàng #" + orderId);
+        walletTransactionRepository.save(tx);
+    }
+
+    @Transactional
+    public void releaseEscrow(Integer buyerId, Integer sellerId, BigDecimal amount, Integer orderId) {
+        Wallet buyerWallet = walletRepository.findByUserId(buyerId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy ví của người mua: " + buyerId));
+        Wallet sellerWallet = walletRepository.findByUserId(sellerId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy ví của người bán: " + sellerId));
+
+        if (buyerWallet.getLockedBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Số dự đóng băng của người mua không đủ để giải ngân.");
+        }
+
+        // Subtract from buyer's locked balance
+        buyerWallet.setLockedBalance(buyerWallet.getLockedBalance().subtract(amount));
+        walletRepository.save(buyerWallet);
+
+        // Add to seller's balance
+        BigDecimal sellerOldBalance = sellerWallet.getBalance();
+        sellerWallet.setBalance(sellerOldBalance.add(amount));
+        walletRepository.save(sellerWallet);
+
+        // Log transaction for seller
+        WalletTransaction tx = new WalletTransaction();
+        tx.setWallet(sellerWallet);
+        tx.setType(WalletTransactionType.ESCROW_RELEASE);
+        tx.setAmount(amount);
+        tx.setBalanceBefore(sellerOldBalance);
+        tx.setBalanceAfter(sellerWallet.getBalance());
+        tx.setReferenceType(WalletTransactionReferenceType.ORDER);
+        tx.setReferenceId(orderId);
+        tx.setNote("Nhận tiền giải ngân từ đơn hàng #" + orderId);
+        walletTransactionRepository.save(tx);
+    }
+
+    @Transactional
+    public void refundEscrow(Integer buyerId, BigDecimal amount, Integer orderId) {
+        Wallet wallet = walletRepository.findByUserId(buyerId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy ví của người dùng: " + buyerId));
+        
+        BigDecimal oldBalance = wallet.getBalance();
+        BigDecimal oldLocked = wallet.getLockedBalance();
+
+        if (oldLocked.compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Số dư đóng băng không đủ để hoàn tiền.");
+        }
+
+        wallet.setLockedBalance(oldLocked.subtract(amount));
+        wallet.setBalance(oldBalance.add(amount));
+        walletRepository.save(wallet);
+
+        // Log transaction
+        WalletTransaction tx = new WalletTransaction();
+        tx.setWallet(wallet);
+        tx.setType(WalletTransactionType.REFUND);
+        tx.setAmount(amount);
+        tx.setBalanceBefore(oldBalance);
+        tx.setBalanceAfter(wallet.getBalance());
+        tx.setReferenceType(WalletTransactionReferenceType.ORDER);
+        tx.setReferenceId(orderId);
+        tx.setNote("Hoàn tiền từ đơn hàng #" + orderId);
+        walletTransactionRepository.save(tx);
+    }
 }
