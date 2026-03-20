@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="sidebar bg-dark text-light p-3" style="width: 250px; min-height: 100vh;">
@@ -142,7 +142,7 @@
                     </c:if>
                     <c:if test="${currentUser.role == 'USER'}">
                         <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/dispute/my-disputes"
+                            <a href="${pageContext.request.contextPath}/dispute/list"
                                class="nav-link text-light opacity-75">
                                 <i class="bi bi-person-badge me-2"></i>
                                 Khiếu nại của tôi

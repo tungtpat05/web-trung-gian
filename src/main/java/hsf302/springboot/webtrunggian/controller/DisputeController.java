@@ -19,9 +19,8 @@ public class DisputeController {
 
     private final DisputeService disputeService;
 
-    @GetMapping("/my-disputes")
-    public String myDisputes(Model model, HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
+    @GetMapping("/list")
+    public String myDisputes(Model model, @ModelAttribute("currentUser") User currentUser) {
         if (currentUser == null) return "redirect:/auth/login";
         
         List<Dispute> disputes = disputeService.getDisputesByUser(currentUser.getId());
@@ -30,7 +29,8 @@ public class DisputeController {
     }
 
     @GetMapping("/create/{orderId}")
-    public String showCreateForm(@PathVariable Integer orderId, Model model) {
+    public String showCreateForm(@PathVariable Integer orderId, Model model, @ModelAttribute("currentUser") User currentUser) {
+        if (currentUser == null) return "redirect:/auth/login";
         model.addAttribute("orderId", orderId);
         return "dispute/create";
     }
@@ -39,8 +39,7 @@ public class DisputeController {
     public String createDispute(@RequestParam Integer orderId,
                                 @RequestParam String reason,
                                 @RequestParam String description,
-                                HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
+                                @ModelAttribute("currentUser") User currentUser) {
         if (currentUser == null) return "redirect:/auth/login";
 
         Dispute dispute = disputeService.createDispute(orderId, currentUser.getId(), reason, description);
@@ -48,8 +47,7 @@ public class DisputeController {
     }
 
     @GetMapping("/detail/{id}")
-    public String showDetail(@PathVariable Integer id, Model model, HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
+    public String showDetail(@PathVariable Integer id, Model model, @ModelAttribute("currentUser") User currentUser) {
         if (currentUser == null) return "redirect:/auth/login";
 
         Dispute dispute = disputeService.getDisputeById(id);
@@ -71,8 +69,7 @@ public class DisputeController {
     @PostMapping("/message")
     public String addMessage(@RequestParam Integer disputeId,
                              @RequestParam String content,
-                             HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
+                             @ModelAttribute("currentUser") User currentUser) {
         if (currentUser == null) return "redirect:/auth/login";
 
         disputeService.addMessage(disputeId, currentUser.getId(), content);

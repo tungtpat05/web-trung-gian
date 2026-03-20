@@ -195,7 +195,12 @@
                                         <td style="white-space:nowrap;font-size:0.8rem">${o.createdAt}</td>
                                         <td style="white-space:nowrap;font-size:0.8rem">${o.createdAt}</td>
                                         <td>
-                                            <a href="${pageContext.request.contextPath}/orders/detail/${o.id}" class="btn-detail">ℹ CHI TIẾT</a>
+                                            <div class="d-flex flex-column gap-1">
+                                                <a href="${pageContext.request.contextPath}/orders/detail/${o.id}" class="btn-detail">ℹ CHI TIẾT</a>
+                                                <c:if test="${viewType=='buyer'}">
+                                                    <a href="${pageContext.request.contextPath}/dispute/create/${o.id}" class="btn-detail" style="background: #dc3545;">⚠ KHIẾU NẠI</a>
+                                                </c:if>
+                                            </div>
                                         </td>
                                     </tr>
                                 </c:forEach>
