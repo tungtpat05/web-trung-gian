@@ -98,6 +98,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                             .requestMatchers("/wallet/stransactions").hasAnyRole("USER", "ADMIN")
                             .requestMatchers("/wallet/**").hasRole("USER")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/listings", "/listings/**").permitAll()
+                            .requestMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
+                            .requestMatchers("/home").authenticated()
                             .requestMatchers(
                                     "/home"
                             ).authenticated()//user đã đăng nhập

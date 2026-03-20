@@ -76,25 +76,44 @@
 
         <c:if test="${currentUser.role == 'USER'}">
             <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/order" class="nav-link text-light">
-                    <i class="bi bi-bag me-2"></i> Mua hàng
+                <a href="${pageContext.request.contextPath}/listings" class="nav-link text-light">
+                    <i class="bi bi-shop me-2"></i> Mua hàng
                 </a>
             </li>
         </c:if>
 
         <c:if test="${currentUser.role == 'USER'}">
             <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/market" class="nav-link text-light">
-                    <i class="bi bi-shop me-2"></i> Chợ công khai
+                <a class="nav-link text-light d-flex justify-content-between align-items-center"
+                   data-bs-toggle="collapse"
+                   href="#escrowMenu"
+                   role="button"
+                   aria-expanded="false">
+                    <span><i class="bi bi-shield-check me-2"></i> Trung gian</span>
+                    <i class="bi bi-chevron-down small"></i>
                 </a>
-            </li>
-        </c:if>
-
-        <c:if test="${currentUser.role == 'USER'}">
-            <li class="nav-item">
-                <a href="${pageContext.request.contextPath}/escrow" class="nav-link text-light">
-                    <i class="bi bi-shield-check me-2"></i> Trung gian
-                </a>
+                <div class="collapse ps-4" id="escrowMenu">
+                    <ul class="nav flex-column gap-1">
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/listings"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-cart me-2"></i> Chợ công khai
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/orders/my-sales"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-bag-check me-2"></i> Đơn bán của tôi
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/orders/my-purchases"
+                               class="nav-link text-light opacity-75">
+                                <i class="bi bi-bag me-2"></i> Đơn mua của tôi
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </c:if>
 
@@ -114,7 +133,7 @@
                 <ul class="nav flex-column gap-1">
                     <c:if test="${currentUser.role == 'ADMIN'}">
                         <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/admin/dispute/list"
+                            <a href="${pageContext.request.contextPath}/admin/dispute/listings"
                                class="nav-link text-light opacity-75">
                                 <i class="bi bi-list-task me-2"></i>
                                 Quản lý khiếu nại
