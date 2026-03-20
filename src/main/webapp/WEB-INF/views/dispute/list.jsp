@@ -42,7 +42,7 @@
                                     <td>${d.createdAt}</td>
                                     <td><span class="badge ${d.status == 'CLOSED' || d.status == 'RESOLVED' ? 'bg-success' : 'bg-warning'}">${d.status}</span></td>
                                     <td>
-                                        <a href="/dispute/detail/${d.id}" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
+                                        <a href="${pageContext.request.contextPath}/dispute/detail/${d.id}" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
                                     </td>
                                 </tr>
                             </c:forEach>

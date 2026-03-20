@@ -21,7 +21,7 @@
         <main class="p-4">
             <div class="bg-white p-4 border rounded shadow-sm">
                 <h5 class="mb-4">Tạo khiếu nại cho đơn hàng #${orderId}</h5>
-                <form action="/dispute/create" method="post">
+                <form action="${pageContext.request.contextPath}/dispute/create" method="post">
                     <input type="hidden" name="orderId" value="${orderId}">
                     <div class="mb-3">
                         <label for="reason" class="form-label">Lý do khiếu nại</label>
@@ -38,7 +38,7 @@
                         <textarea class="form-control" id="description" name="description" rows="5" required placeholder="Nhập chi tiết vấn đề bạn đang gặp phải..."></textarea>
                     </div>
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="/home" class="btn btn-secondary">Hủy</a>
+                        <a href="${pageContext.request.contextPath}/home" class="btn btn-secondary">Hủy</a>
                         <button type="submit" class="btn btn-danger">Gửi khiếu nại</button>
                     </div>
                 </form>

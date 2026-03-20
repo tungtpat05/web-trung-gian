@@ -184,21 +184,6 @@ public class OrderService {
     }
 
     // =========================================================
-    // BUYER: Mở khiếu nại → DisputeController (P5) xử lý tiếp
-    // =========================================================
-    @Transactional
-    public void requestDispute(Integer orderId, Integer buyerId) {
-        Order order = getOrderAndCheckOwner(orderId, buyerId, "buyer");
-
-        if (order.getStatus() != OrderStatus.CONFIRMED && order.getStatus() != OrderStatus.DELIVERED) {
-            throw new IllegalStateException("Chỉ có thể khiếu nại khi đơn CONFIRMED hoặc DELIVERED.");
-        }
-
-        order.setStatus(OrderStatus.DISPUTED);
-        orderRepository.save(order);
-    }
-
-    // =========================================================
     // READ
     // =========================================================
     public Page<Order> getBuyerOrders(Integer buyerId, Pageable pageable) {
