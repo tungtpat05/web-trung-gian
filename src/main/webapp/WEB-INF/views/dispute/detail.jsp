@@ -56,7 +56,7 @@
                             </c:forEach>
                         </div>
                         <c:if test="${dispute.status != 'CLOSED' && dispute.status != 'RESOLVED' && dispute.status != 'REFUNDED'}">
-                            <form action="/dispute/message" method="post">
+                            <form action="${pageContext.request.contextPath}/dispute/message" method="post">
                                 <input type="hidden" name="disputeId" value="${dispute.id}">
                                 <div class="input-group">
                                     <input type="text" name="content" class="form-control" placeholder="Nhập tin nhắn..." required>

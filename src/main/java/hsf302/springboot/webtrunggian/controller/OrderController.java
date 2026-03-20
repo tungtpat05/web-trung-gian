@@ -195,21 +195,4 @@ public class OrderController {
         }
         return "redirect:/orders/detail/" + orderId;
     }
-
-    // ---------------------------------------------------------
-    // BUYER: Mở khiếu nại → sang DisputeController (P5)
-    // ---------------------------------------------------------
-    @PostMapping("/{orderId}/dispute")
-    public String disputeOrder(@PathVariable Integer orderId,
-                               @ModelAttribute("currentUser") User currentUser,
-                               RedirectAttributes ra) {
-        if (currentUser == null) return "redirect:/auth/login";
-        try {
-            orderService.requestDispute(orderId, currentUser.getId());
-            return "redirect:/dispute/create/" + orderId;
-        } catch (Exception e) {
-            ra.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/orders/detail/" + orderId;
-        }
-    }
 }

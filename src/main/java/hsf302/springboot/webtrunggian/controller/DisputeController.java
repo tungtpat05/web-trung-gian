@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -39,11 +40,17 @@ public class DisputeController {
     public String createDispute(@RequestParam Integer orderId,
                                 @RequestParam String reason,
                                 @RequestParam String description,
-                                @ModelAttribute("currentUser") User currentUser) {
+                                @ModelAttribute("currentUser") User currentUser,
+                                RedirectAttributes ra) {
         if (currentUser == null) return "redirect:/auth/login";
 
-        Dispute dispute = disputeService.createDispute(orderId, currentUser.getId(), reason, description);
-        return "redirect:/dispute/detail/" + dispute.getId();
+        try {
+            Dispute dispute = disputeService.createDispute(orderId, currentUser.getId(), reason, description);
+            return "redirect:/dispute/detail/" + dispute.getId();
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/orders/my-purchases";
+        }
     }
 
     @GetMapping("/detail/{id}")

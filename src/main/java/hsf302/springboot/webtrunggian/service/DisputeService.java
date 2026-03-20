@@ -31,6 +31,10 @@ public class DisputeService {
             throw new IllegalStateException("Đơn hàng này đã đang trong quá trình khiếu nại.");
         }
 
+        if (order.getStatus() != OrderStatus.CONFIRMED && order.getStatus() != OrderStatus.DELIVERED) {
+            throw new IllegalStateException("Chỉ có thể khiếu nại khi đơn CONFIRMED hoặc DELIVERED.");
+        }
+
         Dispute dispute = new Dispute();
         dispute.setOrder(order);
         
@@ -42,9 +46,6 @@ public class DisputeService {
         dispute.setDescription(description);
         dispute.setStatus(DisputeStatus.PENDING);
         dispute.setCreatedAt(LocalDateTime.now());
-
-        // Lock escrow funds
-        walletService.lockEscrow(userId, order.getEscrowAmount(), order.getId());
 
         // Update order status
         order.setStatus(OrderStatus.DISPUTED);
