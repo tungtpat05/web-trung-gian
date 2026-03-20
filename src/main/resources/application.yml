@@ -15,8 +15,6 @@ spring:
     username: sa
     password: 123
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-      
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -24,7 +22,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
   mvc:
     view:
       prefix: /WEB-INF/views/
@@ -35,8 +32,10 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
+
