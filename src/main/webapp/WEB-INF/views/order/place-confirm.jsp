@@ -17,11 +17,11 @@
                 Tiền escrow sẽ bị <strong>khóa</strong> trong ví của bạn cho đến khi giao dịch hoàn tất.
             </p>
             <div class="d-flex gap-2">
-                <form method="post" action="/orders/place">
+                <form method="post" action="${pageContext.request.contextPath}/orders/place">
                     <input type="hidden" name="listingId" value="${listingId}">
                     <button class="btn btn-success">Xác nhận đặt hàng</button>
                 </form>
-                <a href="/listings/${listingId}" class="btn btn-outline-secondary">Quay lại</a>
+                <a href="${pageContext.request.contextPath}/listings/${listingId}" class="btn btn-outline-secondary">Quay lại</a>
             </div>
         </div>
     </div>

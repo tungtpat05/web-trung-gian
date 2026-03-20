@@ -70,11 +70,18 @@
                 </div>
                 <div class="d-flex gap-2">
                     <c:if test="${viewType=='seller'}">
-                        <a href="${pageContext.request.contextPath}/listings" class="btn-add">+ THÊM MỚI</a>
+                        <a href="${pageContext.request.contextPath}/listings/create" class="btn-add">+ THÊM MỚI</a>
                     </c:if>
                     <button class="btn-hd">📋 HƯỚNG DẪN SỬ DỤNG</button>
                 </div>
             </div>
+
+            <c:if test="${not empty successMessage}">
+                <div class="alert alert-success">${successMessage}</div>
+            </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger">${errorMessage}</div>
+            </c:if>
 
             <div class="card-table">
                 <div class="table-responsive">
@@ -195,7 +202,14 @@
                                         <td style="white-space:nowrap;font-size:0.8rem">${o.createdAt}</td>
                                         <td style="white-space:nowrap;font-size:0.8rem">${o.createdAt}</td>
                                         <td>
-                                            <a href="${pageContext.request.contextPath}/orders/detail/${o.id}" class="btn-detail">ℹ CHI TIẾT</a>
+                                            <c:choose>
+                                                <c:when test="${viewType=='seller' && o.listingPlaceholder}">
+                                                    <a href="${pageContext.request.contextPath}/listings/${o.id}" class="btn-detail">ℹ CHI TIẾT</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="${pageContext.request.contextPath}/orders/detail/${o.id}" class="btn-detail">ℹ CHI TIẾT</a>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </td>
                                     </tr>
                                 </c:forEach>

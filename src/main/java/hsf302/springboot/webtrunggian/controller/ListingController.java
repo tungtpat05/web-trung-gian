@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -68,5 +69,66 @@ public class ListingController {
         model.addAttribute("feeNote",   feeNote);
         model.addAttribute("isOwner",   isOwner);
         return "listing/detail";
+    }
+
+    // ---------------------------------------------------------
+    // SELLER: Tạo listing mới
+    // ---------------------------------------------------------
+    @GetMapping("/create")
+    public String showCreateForm(@ModelAttribute("currentUser") User currentUser,
+                                   Model model) {
+        if (currentUser == null) return "redirect:/auth/login";
+
+        // Dùng cho select option
+        model.addAttribute("visibilities", List.of("PUBLIC", "PRIVATE"));
+        model.addAttribute("feePayers", List.of("BUYER", "SELLER", "SPLIT"));
+        return "listing/create";
+    }
+
+    @PostMapping("/create")
+    public String createListing(
+            @RequestParam String title,
+            @RequestParam BigDecimal price,
+            @RequestParam String hiddenContent,
+            @RequestParam String visibility,
+            @RequestParam String feePayer,
+            @ModelAttribute("currentUser") User currentUser,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (currentUser == null) return "redirect:/auth/login";
+
+        String normalizedTitle = title == null ? "" : title.trim();
+        String normalizedVisibility = visibility == null ? "PUBLIC" : visibility.trim().toUpperCase();
+        String normalizedFeePayer = feePayer == null ? "BUYER" : feePayer.trim().toUpperCase();
+        String normalizedHiddenContent = hiddenContent == null ? "" : hiddenContent.trim();
+
+        if (normalizedTitle.isBlank()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Chủ đề trung gian không được để trống.");
+            return "redirect:/listings/create";
+        }
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Giá tiền không hợp lệ.");
+            return "redirect:/listings/create";
+        }
+        // Sanitize enums-like fields so listing luôn được render đúng ở /listings
+        if (!normalizedVisibility.equals("PUBLIC") && !normalizedVisibility.equals("PRIVATE")) {
+            normalizedVisibility = "PUBLIC";
+        }
+        if (!normalizedFeePayer.equals("BUYER") && !normalizedFeePayer.equals("SELLER") && !normalizedFeePayer.equals("SPLIT")) {
+            normalizedFeePayer = "BUYER";
+        }
+
+        Listing listing = new Listing();
+        listing.setSeller(currentUser);
+        listing.setTitle(normalizedTitle);
+        listing.setPrice(price);
+        listing.setHiddenContent(normalizedHiddenContent);
+        listing.setVisibility(normalizedVisibility);
+        listing.setFeePayer(normalizedFeePayer);
+        listing.setStatus("AVAILABLE");
+
+        Listing saved = listingRepository.save(listing);
+        redirectAttributes.addFlashAttribute("successMessage", "Tạo listing mới thành công! (#" + saved.getId() + ")");
+        return "redirect:/orders/my-sales";
     }
 }

@@ -98,6 +98,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                             .requestMatchers("/wallet/stransactions").hasAnyRole("USER", "ADMIN")
                             .requestMatchers("/wallet/**").hasRole("USER")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
+                            // Allow list public, but creation requires authentication
+                            .requestMatchers("/listings/create").authenticated()
                             .requestMatchers("/listings", "/listings/**").permitAll()
                             .requestMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
                             .requestMatchers("/home").authenticated()
