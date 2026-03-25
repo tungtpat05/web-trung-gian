@@ -45,8 +45,20 @@
         .badge-confirmed { background: #d1ecf1; color: #0c5460; font-size: 0.78rem; padding: 3px 8px; border-radius: 3px; display: inline-block; }
         .badge-delivered { background: #cce5ff; color: #004085; font-size: 0.78rem; padding: 3px 8px; border-radius: 3px; display: inline-block; }
         .badge-completed { background: #d4edda; color: #155724; font-size: 0.78rem; padding: 3px 8px; border-radius: 3px; display: inline-block; }
-        .badge-disputed  { background: #f8d7da; color: #721c24; font-size: 0.78rem; padding: 3px 8px; border-radius: 3px; display: inline-block; }
+        .badge-disputed  { background: #f8d7da; color: #721c24; font-size: 0.78rem; padding: 3px 8px; border-radius: 3px; display: inline-block; position: relative; }
         .badge-cancelled { background: #e2e3e5; color: #383d41; font-size: 0.78rem; padding: 3px 8px; border-radius: 3px; display: inline-block; }
+        .dispute-dot {
+            position: absolute; top: -4px; right: -6px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #ff0000; border: 1.5px solid #fff;
+            animation: disputeBlink 1s infinite;
+        }
+        @keyframes disputeBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .btn-dispute { background: #dc3545; color: #fff; border: none; font-size: 0.8rem; padding: 4px 10px; border-radius: 3px; text-decoration: none; display: inline-block; }
+        .btn-dispute:hover { background: #b02a37; color: #fff; }
     </style>
 </head>
 <body>
@@ -170,7 +182,7 @@
                                                 <c:when test="${o.status=='CONFIRMED'}"><span class="badge-confirmed">Đang xử lý</span></c:when>
                                                 <c:when test="${o.status=='DELIVERED'}"><span class="badge-delivered">Đã giao</span></c:when>
                                                 <c:when test="${o.status=='COMPLETED'}"><span class="badge-completed">Hoàn thành</span></c:when>
-                                                <c:when test="${o.status=='DISPUTED'}"> <span class="badge-disputed">Khiếu nại</span></c:when>
+                                                <c:when test="${o.status=='DISPUTED'}"> <span class="badge-disputed">Khiếu nại<c:if test="${viewType=='seller'}"><span class="dispute-dot"></span></c:if></span></c:when>
                                                 <c:when test="${o.status=='CANCELLED'}"><span class="badge-cancelled">Đã hủy</span></c:when>
                                                 <c:otherwise><span>${o.status}</span></c:otherwise>
                                             </c:choose>
@@ -199,6 +211,9 @@
                                                 <a href="${pageContext.request.contextPath}/orders/detail/${o.id}" class="btn-detail">ℹ CHI TIẾT</a>
                                                 <c:if test="${viewType=='buyer' && (o.status == 'CONFIRMED' || o.status == 'DELIVERED')}">
                                                     <a href="${pageContext.request.contextPath}/dispute/create/${o.id}" class="btn-detail" style="background: #dc3545;">⚠ KHIẾU NẠI</a>
+                                                </c:if>
+                                                <c:if test="${viewType=='seller' && o.status == 'DISPUTED' && disputeMap[o.id] != null}">
+                                                    <a href="${pageContext.request.contextPath}/dispute/detail/${disputeMap[o.id]}" class="btn-dispute">⚠ XEM KHIẾU NẠI</a>
                                                 </c:if>
                                             </div>
                                         </td>

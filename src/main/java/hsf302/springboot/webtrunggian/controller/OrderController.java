@@ -1,8 +1,10 @@
 package hsf302.springboot.webtrunggian.controller;
 
+import hsf302.springboot.webtrunggian.entity.Dispute;
 import hsf302.springboot.webtrunggian.entity.Order;
 import hsf302.springboot.webtrunggian.entity.User;
 import hsf302.springboot.webtrunggian.entity.enums.OrderStatus;
+import hsf302.springboot.webtrunggian.service.DisputeService;
 import hsf302.springboot.webtrunggian.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,12 +15,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
+    private final DisputeService disputeService;
 
     // ---------------------------------------------------------
     // BUYER: Trang xác nhận đặt hàng
@@ -67,6 +73,7 @@ public class OrderController {
         model.addAttribute("currentStatus", status);
         model.addAttribute("allStatuses", OrderStatus.values());
         model.addAttribute("viewType", "buyer");
+        model.addAttribute("disputeMap", new HashMap<Integer, Integer>());
         return "order/my-orders";
     }
 
@@ -85,10 +92,22 @@ public class OrderController {
                 ? orderService.getSellerOrdersByStatus(currentUser.getId(), OrderStatus.valueOf(status), pageable)
                 : orderService.getSellerOrders(currentUser.getId(), pageable);
 
+        // Build disputeMap: orderId -> disputeId for DISPUTED orders
+        Map<Integer, Integer> disputeMap = new HashMap<>();
+        for (Order o : orders.getContent()) {
+            if (o.getStatus() == OrderStatus.DISPUTED) {
+                Dispute d = disputeService.getDisputeByOrderId(o.getId());
+                if (d != null) {
+                    disputeMap.put(o.getId(), d.getId());
+                }
+            }
+        }
+
         model.addAttribute("orders", orders);
         model.addAttribute("currentStatus", status);
         model.addAttribute("allStatuses", OrderStatus.values());
         model.addAttribute("viewType", "seller");
+        model.addAttribute("disputeMap", disputeMap);
         return "order/my-orders";
     }
 

@@ -133,7 +133,7 @@
                 <ul class="nav flex-column gap-1">
                     <c:if test="${currentUser.role == 'ADMIN'}">
                         <li class="nav-item">
-                            <a href="${pageContext.request.contextPath}/admin/dispute/listings"
+                            <a href="${pageContext.request.contextPath}/admin/dispute/list"
                                class="nav-link text-light opacity-75">
                                 <i class="bi bi-list-task me-2"></i>
                                 Quản lý khiếu nại
