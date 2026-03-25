@@ -43,8 +43,7 @@ public class AdminDisputeController {
                           @RequestParam String outcome,
                           @RequestParam String note,
                           @RequestParam(required = false) BigDecimal splitAmount,
-                          HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
+                          @ModelAttribute("currentUser") User currentUser) {
         if (currentUser == null) return "redirect:/auth/login";
 
         disputeService.resolveDispute(disputeId, currentUser.getId(), outcome, note, splitAmount);
@@ -54,8 +53,7 @@ public class AdminDisputeController {
     @PostMapping("/message")
     public String addMessage(@RequestParam Integer disputeId,
                              @RequestParam String content,
-                             HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
+                             @ModelAttribute("currentUser") User currentUser) {
         if (currentUser == null) return "redirect:/auth/login";
 
         disputeService.addMessage(disputeId, currentUser.getId(), content);

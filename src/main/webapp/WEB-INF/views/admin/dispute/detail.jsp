@@ -28,7 +28,10 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="bg-white p-4 border rounded shadow-sm mb-4">
-                        <h5>Xử lý khiếu nại #${dispute.id}</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Xử lý khiếu nại #${dispute.id}</h5>
+
+                        </div>
                         <hr>
                         <p><strong>Trạng thái:</strong> <span class="badge bg-warning">${dispute.status}</span></p>
                         <p><strong>Đơn hàng:</strong> #${dispute.order.id} (Giá: ${dispute.order.priceSnapshot})</p>
@@ -67,13 +70,17 @@
                             </div>
                         </c:if>
                     </div>
+                    <a href="${pageContext.request.contextPath}/admin/dispute/list" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại
+                    </a>
                 </div>
                 <div class="col-md-8">
                     <div class="bg-white p-4 border rounded shadow-sm">
                         <h5>Chat trung gian</h5>
                         <div class="chat-container d-flex flex-column" id="chatContainer">
                             <c:forEach var="msg" items="${messages}">
-                                <div class="message ${msg.sender.role == 'ADMIN' ? 'message-sent' : 'message-received'}">
+                                <c:set var="isSelf" value="${msg.sender.id.toString() eq currentUser.id.toString()}" />
+                                <div class="message ${isSelf ? 'message-sent' : 'message-received'}">
                                     <div class="message-info">
                                         <strong>${msg.sender.username}</strong> (${msg.sender.role}) - ${msg.createdAt}
                                     </div>
