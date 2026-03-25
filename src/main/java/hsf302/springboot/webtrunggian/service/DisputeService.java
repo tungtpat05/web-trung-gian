@@ -163,6 +163,10 @@ public class DisputeService {
         return disputeRepository.findById(id).orElse(null);
     }
 
+    public Dispute getDisputeByOrderId(Integer orderId) {
+        return disputeRepository.findByOrderId(orderId).orElse(null);
+    }
+
     public List<DisputeMessage> getMessages(Integer disputeId) {
         return disputeMessageRepository.findByDisputeIdOrderByCreatedAtAsc(disputeId);
     }
