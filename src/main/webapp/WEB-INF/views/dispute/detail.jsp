@@ -45,7 +45,9 @@
                         <h5>Thảo luận khiếu nại</h5>
                         <div class="chat-container d-flex flex-column" id="chatContainer">
                             <c:forEach var="msg" items="${messages}">
-                                <div class="message ${msg.sender.id == currentUser.id ? 'message-sent' : (msg.sender.role == 'ADMIN' ? 'message-admin' : 'message-received')}">
+                                <c:set var="isSelf" value="${msg.sender.id.toString() eq currentUser.id.toString()}" />
+                                <c:set var="isAdmin" value="${msg.sender.role.name() eq 'ADMIN'}" />
+                                <div class="message ${isSelf ? 'message-sent' : (isAdmin ? 'message-admin' : 'message-received')}">
                                     <div class="message-info">
                                         <strong>${msg.sender.username}</strong> (${msg.sender.role}) - ${msg.createdAt}
                                     </div>
