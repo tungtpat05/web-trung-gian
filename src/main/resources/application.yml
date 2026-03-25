@@ -11,9 +11,9 @@ spring:
       "[mail.smtp.timeout]": 3000
       "[mail.smtp.writetimeout]": 5000
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=webtrunggian_v2;encrypt=true;trustServerCertificate=true
+    url: jdbc:sqlserver://localhost:1433;databaseName=webtrunggian_v33;encrypt=true;trustServerCertificate=true
     username: sa
-    password: 123
+    password: 1234
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
     hibernate:

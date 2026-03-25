@@ -100,7 +100,7 @@ public class WalletController {
         try {
             // Create Withdraw Request
             walletService.createWithdrawRequest(currentUser.getId(), withdrawAmount, bankName, bankAcc);
-            redirectAttributes.addFlashAttribute("successMessage", "Withdraw request created successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Tạo yêu cầu rút tiền thành công!");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

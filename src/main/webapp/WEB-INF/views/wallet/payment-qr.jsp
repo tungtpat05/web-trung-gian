@@ -29,8 +29,10 @@
 
                     <%-- Tạo URL an toàn với JSTL --%>
                     <c:url var="qrUrl" value="https://qr.sepay.vn/img">
-                        <c:param name="acc" value="011120057777" />
-                        <c:param name="bank" value="MBBank" />
+<%--                        <c:param name="acc" value="011120057777" />--%>
+<%--                        <c:param name="bank" value="MBBank" />--%>
+                        <c:param name="acc" value="00004148691" />
+                        <c:param name="bank" value="TPBank" />
                         <c:param name="amount" value="${amount}" />
                         <c:param name="des" value="${internalCode}" />
                         <c:param name="template" value="compact" />
@@ -49,8 +51,10 @@
                             <li class="mb-1">• Số tiền: <strong class="text-danger">${amount}đ</strong></li>
                             <li class="mb-1">• Nội dung chuyển khoản: <strong class="text-danger">${internalCode}</strong></li>
                             <li class="mb-1">• Tên chủ tài khoản: <strong class="text-danger text-uppercase">Nguyễn Thanh Tùng</strong></li>
-                            <li class="mb-1">• Số tài khoản: <strong class="text-danger">011120057777</strong></li>
-                            <li class="mb-1">• <strong class="text-danger">Ngân hàng MB</strong></li>
+<%--                            <li class="mb-1">• Số tài khoản: <strong class="text-danger">011120057777</strong></li>--%>
+<%--                            <li class="mb-1">• <strong class="text-danger">Ngân hàng MB</strong></li>--%>
+                            <li class="mb-1">• Số tài khoản: <strong class="text-danger">00004148691</strong></li>
+                            <li class="mb-1">• <strong class="text-danger">Ngân hàng TP</strong></li>
                         </ul>
                     </div>
 
