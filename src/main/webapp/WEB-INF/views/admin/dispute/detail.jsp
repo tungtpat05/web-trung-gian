@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -12,10 +12,12 @@
     <style>
         body { background-color: #f4f6f9; }
         .main-content { width: calc(100% - 250px); }
-        .chat-container { height: 400px; overflow-y: auto; border: 1px solid #dee2e6; padding: 15px; background: #fff; margin-bottom: 15px; }
-        .message { margin-bottom: 15px; padding: 10px; border-radius: 10px; max-width: 80%; }
-        .message-sent { background-color: #fff3cd; align-self: flex-end; margin-left: auto; }
-        .message-received { background-color: #f8f9fa; align-self: flex-start; }
+        .chat-row { display: flex; margin-bottom: 15px; }
+        .chat-row.self { justify-content: flex-end; }
+        .chat-row.other { justify-content: flex-start; }
+        .message { padding: 10px; border-radius: 10px; max-width: 80%; }
+        .message-sent { background-color: #fff3cd; }
+        .message-received { background-color: #f8f9fa; }
         .message-info { font-size: 0.75rem; color: #6c757d; }
     </style>
 </head>
@@ -79,8 +81,9 @@
                         <h5>Chat trung gian</h5>
                         <div class="chat-container d-flex flex-column" id="chatContainer">
                             <c:forEach var="msg" items="${messages}">
-                                <c:set var="isSelf" value="${msg.sender.id.toString() eq currentUser.id.toString()}" />
-                                <div class="message ${isSelf ? 'message-sent' : 'message-received'}">
+                                <c:set var="isSelf" value="${msg.sender.id eq currentUser.id}" />
+                                <div class="chat-row ${isSelf ? 'self' : 'other'}">
+                                    <div class="message ${isSelf ? 'message-sent' : 'message-received'}">
                                     <div class="message-info">
                                         <strong>${msg.sender.username}</strong> (${msg.sender.role}) - ${msg.createdAt}
                                     </div>
@@ -88,7 +91,8 @@
                                         ${msg.content}
                                     </div>
                                 </div>
-                            </c:forEach>
+                            </div>
+                        </c:forEach>
                         </div>
                         <form action="/admin/dispute/message" method="post">
                             <input type="hidden" name="disputeId" value="${dispute.id}">
