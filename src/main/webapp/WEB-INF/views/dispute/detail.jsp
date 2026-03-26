@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -12,12 +12,78 @@
     <style>
         body { background-color: #f4f6f9; }
         .main-content { width: calc(100% - 250px); }
-        .chat-container { height: 400px; overflow-y: auto; border: 1px solid #dee2e6; padding: 15px; background: #fff; margin-bottom: 15px; }
-        .message { margin-bottom: 15px; padding: 10px; border-radius: 10px; max-width: 80%; }
-        .message-sent { background-color: #e3f2fd; align-self: flex-end; margin-left: auto; }
-        .message-received { background-color: #f8f9fa; align-self: flex-start; }
-        .message-admin { background-color: #fff3cd; align-self: center; margin-left: auto; margin-right: auto; max-width: 90%; }
-        .message-info { font-size: 0.75rem; color: #6c757d; }
+
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            background: #fff;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* mỗi dòng chat */
+        .chat-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        /* mình */
+        .chat-row.self {
+            justify-content: flex-end;
+        }
+
+        /* người khác (bao gồm admin) */
+        .chat-row.other, .chat-row.admin {
+            justify-content: flex-start;
+        }
+
+        /* khung tin nhắn */
+        .message {
+            max-width: 60%;
+            padding: 10px 14px;
+            border-radius: 15px;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        /* mình (bên phải) */
+        .message-sent {
+            background-color: #0d6efd;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* người khác (bên trái) */
+        .message-received {
+            background-color: #f1f1f1;
+            color: black;
+            border-bottom-left-radius: 5px;
+        }
+
+        /* admin (ở giữa) */
+        .message-admin {
+            background-color: #ffeeba;
+            color: #856404;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .message-info {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-bottom: 3px;
+        }
+
+        /* input cố định dưới */
+        form {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -45,14 +111,20 @@
                         <h5>Thảo luận khiếu nại</h5>
                         <div class="chat-container d-flex flex-column" id="chatContainer">
                             <c:forEach var="msg" items="${messages}">
-                                <c:set var="isSelf" value="${msg.sender.id.toString() eq currentUser.id.toString()}" />
-                                <c:set var="isAdmin" value="${msg.sender.role.name() eq 'ADMIN'}" />
-                                <div class="message ${isSelf ? 'message-sent' : (isAdmin ? 'message-admin' : 'message-received')}">
-                                    <div class="message-info">
-                                        <strong>${msg.sender.username}</strong> (${msg.sender.role}) - ${msg.createdAt}
-                                    </div>
-                                    <div class="message-content">
-                                        ${msg.content}
+                                <c:set var="isSelf" value="${msg.sender.id eq currentUser.id}" />
+                                <c:set var="isAdmin" value="${msg.sender.role == 'ADMIN'}" />
+                                <div class="chat-row ${isSelf ? 'self' : 'other'}">
+                                    <div class="message
+                                        ${isSelf ? 'message-sent' : (isAdmin ? 'message-admin' : 'message-received')}">
+
+                                        <div class="message-info">
+                                            <strong>${msg.sender.username}</strong> (${msg.sender.role}) - ${msg.createdAt}
+                                        </div>
+
+                                        <div class="message-content">
+                                                ${msg.content}
+                                        </div>
+
                                     </div>
                                 </div>
                             </c:forEach>
